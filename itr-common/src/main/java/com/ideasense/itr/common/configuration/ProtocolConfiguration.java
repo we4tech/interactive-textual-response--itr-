@@ -39,6 +39,11 @@ public class ProtocolConfiguration {
   private String type;
 
   /**
+   * Company name, which is used to find out the appropriate navigation service.
+   */
+  private String company;
+
+  /**
    * User account name, which is used for authentication purpose.
    */
   private String userAccount;
@@ -76,6 +81,14 @@ public class ProtocolConfiguration {
 
   public void setType(final String pType) {
     type = pType;
+  }
+
+  public String getCompany() {
+    return company;
+  }
+
+  public void setCompany(final String pCompany) {
+    company = pCompany;
   }
 
   public String getUserAccount() {

@@ -22,36 +22,44 @@
  * $LastChangedRevision$
  ******************************************************************************
 */
-package com.ideasense.itr.base.service;
-
-import com.ideasense.itr.base.navigation.ITRMapping;
+package com.ideasense.itr.base.navigation;
 
 /**
- * Initiate all daemon and protocol handler related configuration.
+ * Render different type of textual response. echo|color| etc..
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
-public interface ConfigurationService {
+public class Response {
 
-  /**
-   * Find configuration file based on specifiec key and from
-   * {@code configuration-index.properties} file.
-   * @param pKey file locator key.
-   * @return null if nothing found, otherwise the location of file.
-   */
-  public String getConfigurationLocation(final String pKey);
+  private Type type;
+  private String content;
 
-  /**
-   * Open {@code daemon.properties} file and return specific property based on
-   * the given key.
-   * @param pKey property key.
-   * @return the value of property.
-   */
-  public String getDaemonProperty(final String pKey);
+  public Type getType() {
+    return type;
+  }
 
-  /**
-   * Return the whole ITR (Iteractive Text Response) systems mapping among
-   * the companies and navigations.
-   * @return return the instance of {@code ITRMapping}
-   */
-  public ITRMapping getITRMapping();
+  public void setType(final Type pType) {
+    type = pType;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(final String pContent) {
+    content = pContent;
+  }
+
+  public enum Type {
+    ECHO, COLOR, MULTILINE, PLUGIN, HTML
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("{");
+    builder.append("type: '").append(type).append("',");
+    builder.append("content: '").append(content).append("'");
+    builder.append("}");
+    return builder.toString();
+  }
 }

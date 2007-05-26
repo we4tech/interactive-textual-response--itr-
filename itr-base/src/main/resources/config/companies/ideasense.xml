@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Navigation>
+  <!-- This message is printed as welcome message, when user enter the messenger or send the first message. -->
+  <Service-welcome-message>
+    <echo><![CDATA[
+  Welcome to IDEASense ITR service.
+  Right now - ${time} and today - {$date}.
+  ]]></echo>
+  </Service-welcome-message>
+
+  <!-- List of available services -->
+  <Service-index>
+    <Index keyCode="1" title="What is the time right now?">
+      <echo>
+        Right now - ${time}
+      </echo>
+    </Index>
+    <Index keyCode="2" title="Test recursive service.">
+      <Index keyCode="a" title="Node 2.1"/>
+      <Index keyCode="b" title="Node 2.2">
+        <Index keyCode="i" title="Node 2.2.1">
+          <echo>
+            Test message.
+          </echo>
+        </Index>
+      </Index>
+      <Index keyCode="c" title="Node 2.3">
+        <plug-in>http://localhost/test.php</plug-in>
+      </Index>
+    </Index>
+  </Service-index>
+</Navigation>

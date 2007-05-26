@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ITR-mapping>
+  <Companies>
+    <company name="ideasense" url="http://idea-sense.com"
+             import="config/companies/ideasense.xml"/>
+  </Companies>
+</ITR-mapping>

@@ -24,34 +24,42 @@
 */
 package com.ideasense.itr.base.service;
 
-import com.ideasense.itr.base.navigation.ITRMapping;
+import org.apache.log4j.Logger;
+import org.apache.log4j.LogManager;
+import impl.com.ideasense.itr.base.service.ConfigurationServiceImpl;
 
 /**
- * Initiate all daemon and protocol handler related configuration.
+ * A singleton container, which create instance of certain services and inject
+ * dependecies among the services.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
-public interface ConfigurationService {
+public class ObjectInstanceService {
+
+  private static final ObjectInstanceService INSTANCE =
+      new ObjectInstanceService();
+
+  private final Logger LOG = LogManager.getLogger(getClass());
+  private final ConfigurationService mConfigurationService;
+
 
   /**
-   * Find configuration file based on specifiec key and from
-   * {@code configuration-index.properties} file.
-   * @param pKey file locator key.
-   * @return null if nothing found, otherwise the location of file.
+   * Default constructor, it creates all instance of objects.
    */
-  public String getConfigurationLocation(final String pKey);
+  public ObjectInstanceService() {
+    LOG.info("Initiating ObjectInstanceService.");
+    mConfigurationService = newConfigurationService();
+    LOG.debug("Created new configuration service - " + mConfigurationService);
+  }
+
+  private ConfigurationService newConfigurationService() {
+    return new ConfigurationServiceImpl();
+  }
 
   /**
-   * Open {@code daemon.properties} file and return specific property based on
-   * the given key.
-   * @param pKey property key.
-   * @return the value of property.
+   * Return implementation instance of {@code ConigurationService}.
+   * @return instance of {@code ConfigurationService}.
    */
-  public String getDaemonProperty(final String pKey);
-
-  /**
-   * Return the whole ITR (Iteractive Text Response) systems mapping among
-   * the companies and navigations.
-   * @return return the instance of {@code ITRMapping}
-   */
-  public ITRMapping getITRMapping();
+  public static ConfigurationService getConfigurationService() {
+    return INSTANCE.mConfigurationService;
+  }
 }

@@ -22,36 +22,31 @@
  * $LastChangedRevision$
  ******************************************************************************
 */
-package com.ideasense.itr.base.service;
+package com.ideasense.itr.common.helper;
 
-import com.ideasense.itr.base.navigation.ITRMapping;
+import java.io.InputStream;
 
 /**
- * Initiate all daemon and protocol handler related configuration.
+ * Resource discovery related functionalities are covered under this class.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
-public interface ConfigurationService {
+public class ResourceLocator {
 
   /**
-   * Find configuration file based on specifiec key and from
-   * {@code configuration-index.properties} file.
-   * @param pKey file locator key.
-   * @return null if nothing found, otherwise the location of file.
+   * Return {@code InputStream} from current class loader or lookup system default
+   * class loader.
+   * @param pFileName file name.
+   * @return the stream of the file.
    */
-  public String getConfigurationLocation(final String pKey);
-
-  /**
-   * Open {@code daemon.properties} file and return specific property based on
-   * the given key.
-   * @param pKey property key.
-   * @return the value of property.
-   */
-  public String getDaemonProperty(final String pKey);
-
-  /**
-   * Return the whole ITR (Iteractive Text Response) systems mapping among
-   * the companies and navigations.
-   * @return return the instance of {@code ITRMapping}
-   */
-  public ITRMapping getITRMapping();
+  public static InputStream getInputStream(final String pFileName) {
+    InputStream inputStream = ResourceLocator.class.getClassLoader().
+        getResourceAsStream(pFileName);
+    if (inputStream == null) {
+      inputStream = ClassLoader.getSystemResourceAsStream(pFileName);
+    }
+    if (inputStream == null) {
+      throw new RuntimeException("File - " + pFileName + ", not found.");
+    }
+    return inputStream;
+  }
 }

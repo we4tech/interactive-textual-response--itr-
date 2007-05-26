@@ -22,36 +22,40 @@
  * $LastChangedRevision$
  ******************************************************************************
 */
-package com.ideasense.itr.base.service;
-
-import com.ideasense.itr.base.navigation.ITRMapping;
+package com.ideasense.itr.base.navigation;
 
 /**
- * Initiate all daemon and protocol handler related configuration.
+ * A hierarchical presentation of ITR navigation system.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
-public interface ConfigurationService {
+public class ServiceNavigationTree {
 
-  /**
-   * Find configuration file based on specifiec key and from
-   * {@code configuration-index.properties} file.
-   * @param pKey file locator key.
-   * @return null if nothing found, otherwise the location of file.
-   */
-  public String getConfigurationLocation(final String pKey);
+  private Response mWelcomeResponse;
+  private NavigableTree<String, Index> mNavigableTree;
 
-  /**
-   * Open {@code daemon.properties} file and return specific property based on
-   * the given key.
-   * @param pKey property key.
-   * @return the value of property.
-   */
-  public String getDaemonProperty(final String pKey);
+  public void setWelcomeMessage(final Response pResponse) {
+    mWelcomeResponse = pResponse;
+  }
 
-  /**
-   * Return the whole ITR (Iteractive Text Response) systems mapping among
-   * the companies and navigations.
-   * @return return the instance of {@code ITRMapping}
-   */
-  public ITRMapping getITRMapping();
+  public Response getWelcomeMessage() {
+    return mWelcomeResponse;
+  }
+
+  public void setNavigableTree(final NavigableTree<String, Index> pTree) {
+    mNavigableTree = pTree;
+  }
+
+  public NavigableTree<String, Index> getNavigableTree() {
+    return mNavigableTree;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("{");
+    builder.append("response: '").append(mWelcomeResponse).append("',");
+    builder.append("navigableTree: '").append(mNavigableTree).append("'");
+    builder.append("}");
+    return builder.toString();
+  }
 }

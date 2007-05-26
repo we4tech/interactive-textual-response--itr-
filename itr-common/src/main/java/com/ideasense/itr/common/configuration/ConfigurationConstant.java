@@ -22,36 +22,27 @@
  * $LastChangedRevision$
  ******************************************************************************
 */
-package com.ideasense.itr.base.service;
-
-import com.ideasense.itr.base.navigation.ITRMapping;
+package com.ideasense.itr.common.configuration;
 
 /**
- * Initiate all daemon and protocol handler related configuration.
+ * Define constants for configuration related settings.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
-public interface ConfigurationService {
+public class ConfigurationConstant {
 
   /**
-   * Find configuration file based on specifiec key and from
-   * {@code configuration-index.properties} file.
-   * @param pKey file locator key.
-   * @return null if nothing found, otherwise the location of file.
+   * Configuration index keeping file name.
    */
-  public String getConfigurationLocation(final String pKey);
+  public static final String FILE_CONFIGURATION_INDEX =
+      "config/configuration-index.properties";
 
   /**
-   * Open {@code daemon.properties} file and return specific property based on
-   * the given key.
-   * @param pKey property key.
-   * @return the value of property.
+   * Configuration file location for daemon service is registered on this key.
    */
-  public String getDaemonProperty(final String pKey);
+  public static final String CONFIG_LOCATION_DAEMON = "daemon-config";
 
   /**
-   * Return the whole ITR (Iteractive Text Response) systems mapping among
-   * the companies and navigations.
-   * @return return the instance of {@code ITRMapping}
+   * Configuration file location for navigation service is registered on this key.
    */
-  public ITRMapping getITRMapping();
+  public static final String CONFIG_LOCATION_NAVIGATION = "navigation-config";
 }

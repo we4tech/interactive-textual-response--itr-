@@ -1,0 +1,4 @@
+[26/05/07]
+1. ProtocolHandler, AbstractProtocolHandler and ProtocolConfiguration classes
+are added.
+2. Configuration layer completed.

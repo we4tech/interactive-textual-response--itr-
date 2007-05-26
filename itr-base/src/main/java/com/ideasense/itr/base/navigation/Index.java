@@ -22,36 +22,50 @@
  * $LastChangedRevision$
  ******************************************************************************
 */
-package com.ideasense.itr.base.service;
-
-import com.ideasense.itr.base.navigation.ITRMapping;
+package com.ideasense.itr.base.navigation;
 
 /**
- * Initiate all daemon and protocol handler related configuration.
+ * Index object, which holds the user interaction.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
-public interface ConfigurationService {
+public class Index {
 
-  /**
-   * Find configuration file based on specifiec key and from
-   * {@code configuration-index.properties} file.
-   * @param pKey file locator key.
-   * @return null if nothing found, otherwise the location of file.
-   */
-  public String getConfigurationLocation(final String pKey);
+  private String keyCode;
+  private String title;
+  private Response response;
 
-  /**
-   * Open {@code daemon.properties} file and return specific property based on
-   * the given key.
-   * @param pKey property key.
-   * @return the value of property.
-   */
-  public String getDaemonProperty(final String pKey);
+  public String getKeyCode() {
+    return keyCode;
+  }
 
-  /**
-   * Return the whole ITR (Iteractive Text Response) systems mapping among
-   * the companies and navigations.
-   * @return return the instance of {@code ITRMapping}
-   */
-  public ITRMapping getITRMapping();
+  public void setKeyCode(final String pKeyCode) {
+    keyCode = pKeyCode;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(final String pTitle) {
+    title = pTitle;
+  }
+
+  public Response getResponse() {
+    return response;
+  }
+
+  public void setResponse(final Response pResponse) {
+    response = pResponse;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("{");
+    builder.append("keyCode: ").append(keyCode).append(",");
+    builder.append("title: '").append(title).append("',");
+    builder.append("response: '").append(response).append("'");
+    builder.append("}");
+    return builder.toString();
+  }
 }

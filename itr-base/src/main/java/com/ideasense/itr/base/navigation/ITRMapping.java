@@ -22,36 +22,23 @@
  * $LastChangedRevision$
  ******************************************************************************
 */
-package com.ideasense.itr.base.service;
+package com.ideasense.itr.base.navigation;
 
-import com.ideasense.itr.base.navigation.ITRMapping;
+import java.util.List;
 
 /**
- * Initiate all daemon and protocol handler related configuration.
+ * Mapping for company and navigation services.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
-public interface ConfigurationService {
+public class ITRMapping {
 
-  /**
-   * Find configuration file based on specifiec key and from
-   * {@code configuration-index.properties} file.
-   * @param pKey file locator key.
-   * @return null if nothing found, otherwise the location of file.
-   */
-  public String getConfigurationLocation(final String pKey);
+  private List<Company> mCompanies;
 
-  /**
-   * Open {@code daemon.properties} file and return specific property based on
-   * the given key.
-   * @param pKey property key.
-   * @return the value of property.
-   */
-  public String getDaemonProperty(final String pKey);
+  public void setCompanies(final List<Company> pCompanies) {
+    mCompanies = pCompanies;
+  }
 
-  /**
-   * Return the whole ITR (Iteractive Text Response) systems mapping among
-   * the companies and navigations.
-   * @return return the instance of {@code ITRMapping}
-   */
-  public ITRMapping getITRMapping();
+  public List<Company> getCompanies() {
+    return mCompanies;
+  }
 }

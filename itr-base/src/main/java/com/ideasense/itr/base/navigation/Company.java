@@ -22,36 +22,51 @@
  * $LastChangedRevision$
  ******************************************************************************
 */
-package com.ideasense.itr.base.service;
-
-import com.ideasense.itr.base.navigation.ITRMapping;
+package com.ideasense.itr.base.navigation;
 
 /**
- * Initiate all daemon and protocol handler related configuration.
+ * Company object for {@code ITRMapping}.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
-public interface ConfigurationService {
+public class Company {
 
-  /**
-   * Find configuration file based on specifiec key and from
-   * {@code configuration-index.properties} file.
-   * @param pKey file locator key.
-   * @return null if nothing found, otherwise the location of file.
-   */
-  public String getConfigurationLocation(final String pKey);
+  private String name;
+  private String url;
+  private ServiceNavigationTree serviceNavigationTree;
 
-  /**
-   * Open {@code daemon.properties} file and return specific property based on
-   * the given key.
-   * @param pKey property key.
-   * @return the value of property.
-   */
-  public String getDaemonProperty(final String pKey);
+  public String getName() {
+    return name;
+  }
 
-  /**
-   * Return the whole ITR (Iteractive Text Response) systems mapping among
-   * the companies and navigations.
-   * @return return the instance of {@code ITRMapping}
-   */
-  public ITRMapping getITRMapping();
+  public void setName(final String pName) {
+    name = pName;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(final String pUrl) {
+    url = pUrl;
+  }
+
+  public ServiceNavigationTree getServiceNavigationTree() {
+    return serviceNavigationTree;
+  }
+
+  public void setServiceNavigationTree(final ServiceNavigationTree pServiceNavigationTree) {
+    serviceNavigationTree = pServiceNavigationTree;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("{");
+    builder.append("name: '").append(name).append("',");
+    builder.append("url: '").append(url).append("',");
+    builder.append("serviceNavigationTree: '").append(serviceNavigationTree).
+            append("'");
+    builder.append("}");
+    return builder.toString();
+  }
 }
