@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ITR-mapping xmlns="http://idea-sense.com/itr-mapping"
+<!--
+xmlns="http://idea-sense.com/itr-mapping"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://idea-sense.com/itr-mapping itr-mapping.xsd">
+           xsi:schemaLocation="http://idea-sense.com/itr-mapping itr-mapping.xsd"
+-->
+<ITR-mapping>
   <Companies>
     <company name="ideasense" url="http://idea-sense.com"
              import="config/companies/ideasense.xml"/>

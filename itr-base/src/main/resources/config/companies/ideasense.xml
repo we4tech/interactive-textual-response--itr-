@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+xmlns="http://idea-sense.com/navigation"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://idea-sense.com/navigation navigation.xsd"
+-->
 <Navigation>
-  <!-- This message is printed as welcome message, when user enter the messenger or send the first message. -->
+  <!--+
+      | This message is printed as welcome message, when user enter the messenger
+      | or send the first message.
+      +-->
   <Service-welcome-message>
     <echo><![CDATA[
   Welcome to IDEASense ITR service.
@@ -8,7 +16,9 @@
   ]]></echo>
   </Service-welcome-message>
 
-  <!-- List of available services -->
+  <!--+
+      | List of available services
+      +-->
   <Service-index>
     <Index keyCode="1" title="What is the time right now?">
       <echo>

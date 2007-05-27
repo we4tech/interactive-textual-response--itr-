@@ -10,18 +10,19 @@
     </layout>
   </appender>
 
-  <logger name="com.ideasense">
+<!--  <logger name="com.ideasense">
     <level value="DEBUG"/>
     <appender-ref ref="CONSOLE"/>
   </logger>
   <logger name="impl.com.ideasense">
     <level value="DEBUG"/>
     <appender-ref ref="CONSOLE"/>
-  </logger>
+  </logger>-->
 
 
   <root>
     <level value="DEBUG"/>
+    <appender-ref ref="CONSOLE"/>
   </root>
 
 </log4j:configuration>

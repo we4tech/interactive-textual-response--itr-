@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://idea-sense.com/navigation" elementFormDefault="qualified" xmlns="http://idea-sense.com/navigation" xmlns:mstns="http://idea-sense.com/navigation" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Navigation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Service-welcome-message">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:group ref="responseGroup" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Service-index">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Index" type="IndexType" minOccurs="1" maxOccurs='unbounded' />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="echoType" id="echoType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="plug-inType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="IndexType">
+    <xs:sequence>
+      <xs:group ref="indexResponseGroup" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="keyCode" type="xs:string" />
+    <xs:attribute name="title" type="xs:string" />
+  </xs:complexType>
+  <xs:group name="responseGroup">
+    <xs:choice>
+      <xs:element name="echo" type="xs:string">
+      </xs:element>
+      <xs:element name="plug-in" type="xs:string" />
+    </xs:choice>
+  </xs:group>
+  <xs:group name="indexResponseGroup">
+    <xs:choice>
+      <xs:group ref="responseGroup" />
+      <xs:element name="Index" type="IndexType" maxOccurs='unbounded' />
+    </xs:choice>
+  </xs:group>
+</xs:schema>

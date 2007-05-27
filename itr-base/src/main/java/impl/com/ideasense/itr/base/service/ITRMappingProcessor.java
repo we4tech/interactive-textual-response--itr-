@@ -36,7 +36,11 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
+import org.xml.sax.XMLReader;
+import org.xml.sax.EntityResolver;
 import nu.xom.*;
+
+import javax.xml.parsers.SAXParserFactory;
 
 /**
  * Load ITR Mapping file and create the navigations.
@@ -46,7 +50,6 @@ public class ITRMappingProcessor {
 
   private final Logger LOG = LogManager.getLogger(getClass());
 
-  private final ITRMapping mItrMapping = new ITRMapping();
   private static final String ELEMENT_COMPANIES = "Companies";
   private static String ElEMENT_COMPANY = "company";
   private static final String ATTR_NAME = "name";
@@ -61,6 +64,10 @@ public class ITRMappingProcessor {
   private static final String ATTR_TITLE = "title";
   private static final String DEFAULT_INDEX = "0";
   private static final String ELEMENT_PLUG_IN = "plug-in";
+  private static final String ITR_MAPPING_BASE_NAME_SPACE =
+      "http://idea-sense.com/itr-mapping";
+
+  private final ITRMapping mItrMapping = new ITRMapping();
 
   public ITRMappingProcessor(final InputStream pConfigurationInputStream) {
     LOG.debug("Constructing ITRMappingProcessor, configuration stream - " +
@@ -71,9 +78,12 @@ public class ITRMappingProcessor {
 
   private void initiateITRMapping(final InputStream pConfigurationInputStream) {
     try {
-      final Builder builder = new Builder();
+      Builder builder = new Builder();
       Document document = builder.build(pConfigurationInputStream);
       Element rootElement = document.getRootElement(); // ITR-mapping
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Root element - " + rootElement);
+      }
       // Find out companies
       mItrMapping.setCompanies(findCompanies(rootElement));
 
@@ -87,6 +97,8 @@ public class ITRMappingProcessor {
 
     Element companiesElement =
         pRootElement.getFirstChildElement(ELEMENT_COMPANIES);
+    LOG.debug("Companies - " + companiesElement);
+
     if (companiesElement != null) {
       Elements companyElements =
           companiesElement.getChildElements(ElEMENT_COMPANY);
