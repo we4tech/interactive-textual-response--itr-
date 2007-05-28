@@ -27,6 +27,7 @@ package com.ideasense.itr.base.service;
 import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
 import impl.com.ideasense.itr.base.service.ConfigurationServiceImpl;
+import impl.com.ideasense.itr.base.service.NavigationServiceImpl;
 
 /**
  * A singleton container, which create instance of certain services and inject
@@ -40,6 +41,7 @@ public class ObjectInstanceService {
 
   private final Logger LOG = LogManager.getLogger(getClass());
   private final ConfigurationService mConfigurationService;
+  private final NavigationService mNavigationService;
 
 
   /**
@@ -48,7 +50,11 @@ public class ObjectInstanceService {
   public ObjectInstanceService() {
     LOG.info("Initiating ObjectInstanceService.");
     mConfigurationService = newConfigurationService();
-    LOG.debug("Created new configuration service - " + mConfigurationService);
+    mNavigationService = newNavigationService();
+  }
+
+  private NavigationService newNavigationService() {
+    return new NavigationServiceImpl(mConfigurationService);
   }
 
   private ConfigurationService newConfigurationService() {

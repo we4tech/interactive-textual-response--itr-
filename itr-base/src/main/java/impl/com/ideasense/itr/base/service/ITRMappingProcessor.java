@@ -31,16 +31,16 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Collections;
-import java.util.TreeMap;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
 import org.xml.sax.XMLReader;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.XMLReaderFactory;
 import nu.xom.*;
-
-import javax.xml.parsers.SAXParserFactory;
 
 /**
  * Load ITR Mapping file and create the navigations.
@@ -64,19 +64,36 @@ public class ITRMappingProcessor {
   private static final String ATTR_TITLE = "title";
   private static final String DEFAULT_INDEX = "0";
   private static final String ELEMENT_PLUG_IN = "plug-in";
-  private static final String ITR_MAPPING_BASE_NAME_SPACE =
+  private static final String NAMESPACE_ITR_MAPPING =
       "http://idea-sense.com/itr-mapping";
+  public static final String SCHEMA_ITR_MAPPING_LOCATION =
+      "schema/itr-mapping.xsd";
+  private static final String FACTORY_SAX_PARSER =
+      "org.apache.xerces.parsers.SAXParser";
+  private static final String SCHEMA_VALIDATION =
+      "http://apache.org/xml/features/validation/schema";
+  private static final String SCHEMA_NAVIGATION_LOCATION =
+      "schema/navigation.xsd";
+  public static final String NAMESPACE_NAVIGATION =
+      "http://idea-sense.com/navigation";
 
   private final ITRMapping mItrMapping = new ITRMapping();
 
+  /**
+   * Default constructor, it excepts {@code InputStream} of configuration
+   * xml file.
+   * @param pConfigurationInputStream input stream of configuration xml file.
+   */
   public ITRMappingProcessor(final InputStream pConfigurationInputStream) {
-    LOG.debug("Constructing ITRMappingProcessor, configuration stream - " +
-              pConfigurationInputStream);
-
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Constructing ITRMappingProcessor, configuration stream - " +
+                pConfigurationInputStream);
+    }
     initiateITRMapping(pConfigurationInputStream);
   }
 
   private void initiateITRMapping(final InputStream pConfigurationInputStream) {
+    LOG.info("ITRMapping processing has been started.");
     try {
       Builder builder = new Builder();
       Document document = builder.build(pConfigurationInputStream);
@@ -92,8 +109,24 @@ public class ITRMappingProcessor {
     }
   }
 
+  private XMLReader validateXmlDocument(final String pSchemaLocation)
+      throws SAXException {
+    XMLReader xmlReader =
+        XMLReaderFactory.createXMLReader(FACTORY_SAX_PARSER);
+    xmlReader.setFeature(SCHEMA_VALIDATION, true);
+    xmlReader.setEntityResolver(new EntityResolver() {
+      public InputSource resolveEntity(String publicId, String systemId)
+          throws SAXException, IOException {
+        LOG.info("Resolving entry - " + pSchemaLocation);
+        return
+            new InputSource(ResourceLocator.getInputStream(pSchemaLocation));
+      }
+    });
+    return xmlReader;
+  }
+
   private List<Company> findCompanies(final Element pRootElement)
-      throws IOException, ParsingException {
+      throws IOException, ParsingException, SAXException {
 
     Element companiesElement =
         pRootElement.getFirstChildElement(ELEMENT_COMPANIES);
@@ -114,6 +147,9 @@ public class ITRMappingProcessor {
             company.setServiceNavigationTree(
                 importNavigation(companyElement.
                                  getAttributeValue(ATTR_IMPORT)));
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("Adding company - " + company);
+            }
             companyList.add(company);
           }
         }

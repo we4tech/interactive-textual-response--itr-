@@ -2,4 +2,5 @@
 1. ProtocolHandler, AbstractProtocolHandler and ProtocolConfiguration classes
 are added.
 2. Configuration layer completed.
-3, added schema for itr-mappming and navigation
+3 added schema for itr-mappming and navigation
+4. implemented NavigationService.

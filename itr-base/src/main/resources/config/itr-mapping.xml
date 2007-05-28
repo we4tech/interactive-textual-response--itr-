@@ -8,5 +8,5 @@ xmlns="http://idea-sense.com/itr-mapping"
   <Companies>
     <company name="ideasense" url="http://idea-sense.com"
              import="config/companies/ideasense.xml"/>
-  </Companies>  
+  </Companies>
 </ITR-mapping>

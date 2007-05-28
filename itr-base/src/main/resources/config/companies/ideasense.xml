@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
-xmlns="http://idea-sense.com/navigation"
+    <!--
+      xmlns="http://idea-sense.com/navigation"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://idea-sense.com/navigation navigation.xsd"
--->
+    -->
 <Navigation>
   <!--+
       | This message is printed as welcome message, when user enter the messenger
