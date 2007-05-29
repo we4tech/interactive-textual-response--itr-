@@ -21,5 +21,27 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- Manual installation required -->
+    <!--
+    | Example maven installation
+    |   mvn install:install-file -DgroupId=jml -DartifactId=jml -Dversion=1.0b1 -Dpackaging=jar -Dfile=/path/to/file
+    |   mvn install:install-file -DgroupId=jml -DartifactId=cindy -Dversion=2.4.4 -Dpackaging=jar -Dfile=/path/to/file
+    -->
+    <dependency>
+      <artifactId>cindy</artifactId>
+      <groupId>jml</groupId>
+      <version>2.4.4</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
+      <artifactId>jml</artifactId>
+      <groupId>jml</groupId>
+      <version>1.0b1</version>
+    </dependency>
   </dependencies>
 </project>

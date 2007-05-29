@@ -4,4 +4,6 @@ are added.
 2. Configuration layer completed.
 3 added schema for itr-mappming and navigation
 4. implemented NavigationService.
+[29/05/07]
 5. completed visitor / response flow.
+6. added dependency on cindy, commons-logging and jml msn library.
