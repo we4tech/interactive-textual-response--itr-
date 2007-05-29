@@ -12,7 +12,7 @@
   <Service-welcome-message>
     <echo><![CDATA[
   Welcome to IDEASense ITR service.
-  Right now - ${time} and today - {$date}.
+  Right now - ${time} and today - ${date}.
   ]]></echo>
   </Service-welcome-message>
 

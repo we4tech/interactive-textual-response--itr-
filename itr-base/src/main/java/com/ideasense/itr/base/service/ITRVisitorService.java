@@ -22,57 +22,34 @@
  * $LastChangedRevision$
  ******************************************************************************
 */
-package com.ideasense.itr.base.navigation;
+package com.ideasense.itr.base.service;
+
+import com.ideasense.itr.base.navigation.ITRVisitor;
 
 /**
- * Render different type of textual response. echo|color| etc..
+ * Serve ITR Client the navigation service {@code NavigationService}.
+ * this class is responsible to visit through all navigation tree based
+ * on client response.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
-public class Response {
+public interface ITRVisitorService {
 
-  private Type type;
-  private String content;
   /**
-   * Optionally, navigation response content can be set.
+   * If visitor wasn't banned previously return true.
+   * @return true if visitor has right to go through the navigation system.
+   * @param pVisitor accept visitor to navigate through all navigation items.
+   * @param pCompanyName verify visitor aganist global and company based
+   *        banning rule.
    */
-  private String navigation;
+  public boolean isVisitorAccepted(final String pCompanyName, 
+                                   final ITRVisitor pVisitor);
 
-  public Type getType() {
-    return type;
-  }
+  /**
+   * If visitor has right to visit, let him visit through all tree items.
+   * @param pVisitor visitor object.
+   * @param pCompanyName company name, where visitor will be accepted to visit.
+   */
+  public void acceptVisitor(final String pCompanyName,
+                            final ITRVisitor pVisitor);
 
-  public void setType(final Type pType) {
-    type = pType;
-  }
-
-  public String getContent() {
-    return content;
-  }
-
-  public void setContent(final String pContent) {
-    content = pContent;
-  }
-
-  public enum Type {
-    ECHO, COLOR, MULTILINE, PLUGIN, HTML
-  }
-
-  public String getNavigation() {
-    return navigation;
-  }
-
-  public void setNavigation(final String pNavigation) {
-    navigation = pNavigation;
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("{");
-    builder.append("type: '").append(type).append("',");
-    builder.append("content: '").append(content).append("'");
-    builder.append("navigation: '\r\n").append(navigation).append("\r\n'");
-    builder.append("}");
-    return builder.toString();
-  }
 }

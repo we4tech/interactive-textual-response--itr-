@@ -28,6 +28,10 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
 import impl.com.ideasense.itr.base.service.ConfigurationServiceImpl;
 import impl.com.ideasense.itr.base.service.NavigationServiceImpl;
+import impl.com.ideasense.itr.base.service.ITRVisitorServiceImpl;
+import impl.com.ideasense.itr.base.service.ResponseServiceImpl;
+import impl.com.ideasense.itr.base.navigation.ITRVisitorImpl;
+import com.ideasense.itr.base.navigation.ITRVisitor;
 
 /**
  * A singleton container, which create instance of certain services and inject
@@ -42,6 +46,8 @@ public class ObjectInstanceService {
   private final Logger LOG = LogManager.getLogger(getClass());
   private final ConfigurationService mConfigurationService;
   private final NavigationService mNavigationService;
+  private final ITRVisitorService mItrVisitorService;
+  private final ResponseService mResponseService;
 
 
   /**
@@ -51,6 +57,16 @@ public class ObjectInstanceService {
     LOG.info("Initiating ObjectInstanceService.");
     mConfigurationService = newConfigurationService();
     mNavigationService = newNavigationService();
+    mItrVisitorService = newItrVisitorService();
+    mResponseService = newResponseService();
+  }
+
+  private ResponseService newResponseService() {
+    return new ResponseServiceImpl();
+  }
+
+  private ITRVisitorService newItrVisitorService() {
+    return new ITRVisitorServiceImpl(mNavigationService);
   }
 
   private NavigationService newNavigationService() {
@@ -63,9 +79,37 @@ public class ObjectInstanceService {
 
   /**
    * Return implementation instance of {@code ConigurationService}.
-   * @return instance of {@code ConfigurationService}.
+   * @return implementation instance of {@code ConfigurationService}.
    */
   public static ConfigurationService getConfigurationService() {
     return INSTANCE.mConfigurationService;
+  }
+
+  /**
+   * Return Implementation instance of {@code NavigationService}
+   * @return implementation instance of {@code NavigationService}
+   */
+  public static NavigationService getNavigationService() {
+    return INSTANCE.mNavigationService;
+  }
+
+  /**
+   * Return implementation instance of {@code ITRVisitorService}.
+   * @return implementation instance of {@code ITRVisitorService}.
+   */
+  public static ITRVisitorService getVisitorService() {
+    return INSTANCE.mItrVisitorService;
+  }
+
+  /**
+   * Create new instance of {@code ITRVisitor} implementation class.
+   * @return new instance of {@code ITRVisitor} implementation class.
+   */
+  public static ITRVisitor newVisitor() {
+    return new ITRVisitorImpl();
+  }
+
+  public static ResponseService getResponseService() {
+    return INSTANCE.mResponseService;
   }
 }
