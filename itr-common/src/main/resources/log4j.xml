@@ -10,18 +10,19 @@
     </layout>
   </appender>
 
-  <logger name="com.ideasense.itr.test.base.service.ITRVisitorServiceTest">
+  <!--<logger name="com.ideasense.itr.test.base.service.ITRVisitorServiceTest">
     <level value="DEBUG"/>
     <appender-ref ref="CONSOLE"/>
   </logger>
   <logger name="impl.com.ideasense.itr.base.service.ITRVisitorServiceImplDD">
     <level value="DEBUG"/>
     <appender-ref ref="CONSOLE"/>
-  </logger>
+  </logger>-->
 
 
   <root>
     <level value="DEBUG"/>
+    <appender-ref ref="CONSOLE"/>
   </root>
 
 </log4j:configuration>

@@ -22,10 +22,38 @@
  * $LastChangedRevision$
  ******************************************************************************
 */
-package com.ideasense.itr.plugin;
+package com.ideasense.itr.protocol;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.LogManager;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
 /**
+ * This proxy send out the debug message during the invocation of methods.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
-public class MsnPluginTest {
+public class DebugProxy implements InvocationHandler {
+
+  /**
+   * Register logger for this class.
+   */
+  private static final Logger LOG = LogManager.getLogger(DebugProxy.class);
+
+  /**
+   * {@inheritDoc}
+   * <br>
+   * Send out debug message.
+   *
+   * @param pRoxy {@inheritDoc}
+   * @param method {@inheritDoc}
+   * @param pArgs {@inheritDoc}
+   * @return {@inheritDoc}
+   * @throws Throwable {@inheritDoc}
+   */
+  public Object invoke(Object pRoxy, Method method, Object[] pArgs) throws Throwable {
+    LOG.debug("Proxy - " + pRoxy + ", Method - " + method + ", ARGS - " + 
+              pArgs);
+  }
 }

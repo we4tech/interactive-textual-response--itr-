@@ -31,7 +31,10 @@ import impl.com.ideasense.itr.base.service.NavigationServiceImpl;
 import impl.com.ideasense.itr.base.service.ITRVisitorServiceImpl;
 import impl.com.ideasense.itr.base.service.ResponseServiceImpl;
 import impl.com.ideasense.itr.base.navigation.ITRVisitorImpl;
+import impl.com.ideasense.itr.protocol.MSNProtocolHandlerImpl;
 import com.ideasense.itr.base.navigation.ITRVisitor;
+import com.ideasense.itr.protocol.ProtocolHandler;
+import com.ideasense.itr.common.configuration.ProtocolConfiguration;
 
 /**
  * A singleton container, which create instance of certain services and inject
@@ -111,5 +114,15 @@ public class ObjectInstanceService {
 
   public static ResponseService getResponseService() {
     return INSTANCE.mResponseService;
+  }
+
+  /**
+   * Create new instance of MSN protocol implementation.
+   * @return instance of msn protocol implementation.
+   * @param pConfiguration protocol configuration.
+   */
+  public static ProtocolHandler newMsnProtocolHandler(
+      final ProtocolConfiguration pConfiguration) {
+    return new MSNProtocolHandlerImpl(pConfiguration);
   }
 }

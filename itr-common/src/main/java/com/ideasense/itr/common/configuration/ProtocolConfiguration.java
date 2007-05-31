@@ -36,7 +36,7 @@ public class ProtocolConfiguration {
   /**
    * Protocol type, probable value - yahoo|msn|google|aim|irc|etc..
    */
-  private String type;
+  private Protocol type;
 
   /**
    * Company name, which is used to find out the appropriate navigation service.
@@ -74,12 +74,11 @@ public class ProtocolConfiguration {
    */
   private Map<String, String> properties;
 
-
-  public String getType() {
+  public Protocol getType() {
     return type;
   }
 
-  public void setType(final String pType) {
+  public void setType(final Protocol pType) {
     type = pType;
   }
 
@@ -137,6 +136,17 @@ public class ProtocolConfiguration {
 
   public void setProperties(final Map<String, String> pProperties) {
     properties = pProperties;
+  }
+
+  public static enum Protocol {
+    /**
+     * Protocol type is msn.
+     */
+    MSN,
+    /**
+     * Protcol type is yahoo
+     */
+    YAHOO
   }
 
   /**
