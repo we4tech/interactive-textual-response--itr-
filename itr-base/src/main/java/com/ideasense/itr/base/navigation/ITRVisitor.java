@@ -82,4 +82,16 @@ public interface ITRVisitor {
    * @return the response which will be thrown to the ITR client.
    */
   public Response getResponse();
+
+  /**
+   * ITR visitor name.
+   * @param pName ITR visitor name.
+   */
+  public void setName(final String pName);
+
+  /**
+   * Return ITR visitor name.
+   * @return ITR visitor name.
+   */
+  public String getName();
 }

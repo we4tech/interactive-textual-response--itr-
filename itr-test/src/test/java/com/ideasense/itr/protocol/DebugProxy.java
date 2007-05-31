@@ -40,6 +40,17 @@ public class DebugProxy implements InvocationHandler {
    * Register logger for this class.
    */
   private static final Logger LOG = LogManager.getLogger(DebugProxy.class);
+  private final boolean DEBUG = LOG.isDebugEnabled();
+
+  private final Object mObjectInstance;
+
+  /**
+   * Default constructor.
+   * @param pObjectInstance object instance.
+   */
+  public DebugProxy(final Object pObjectInstance) {
+    mObjectInstance = pObjectInstance;
+  }
 
   /**
    * {@inheritDoc}
@@ -47,13 +58,26 @@ public class DebugProxy implements InvocationHandler {
    * Send out debug message.
    *
    * @param pRoxy {@inheritDoc}
-   * @param method {@inheritDoc}
+   * @param pMethod {@inheritDoc}
    * @param pArgs {@inheritDoc}
    * @return {@inheritDoc}
    * @throws Throwable {@inheritDoc}
    */
-  public Object invoke(Object pRoxy, Method method, Object[] pArgs) throws Throwable {
-    LOG.debug("Proxy - " + pRoxy + ", Method - " + method + ", ARGS - " + 
-              pArgs);
+  public Object invoke(final Object pRoxy, final Method pMethod,
+                       final Object[] pArgs) throws Throwable {
+    if (DEBUG) {
+      LOG.debug("Invoking before method - " + pMethod.getName());
+    }
+    Object result = null;
+    try {
+      result = pMethod.invoke(mObjectInstance, pArgs);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to invoke", e);
+    } finally {
+      if (DEBUG) {
+        LOG.debug("Invoking after method - " + pMethod.getName());
+      }
+    }
+    return result;
   }
 }

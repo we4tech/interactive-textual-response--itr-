@@ -49,6 +49,7 @@ public class ITRVisitorImpl implements ITRVisitor {
   private final StringBuilder mNavigationResponseBuilder = new StringBuilder();
   private final StringBuilder mBlankStringBuilder = new StringBuilder();
   private List<String> mCommandParams;
+  private String mName;
 
   /**
    * {@inheritDoc}
@@ -160,4 +161,15 @@ public class ITRVisitorImpl implements ITRVisitor {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   * @param pName {@inheritDoc}
+   */
+  public void setName(final String pName) {
+    mName = pName;
+  }
+
+  public String getName() {
+    return mName;
+  }
 }

@@ -25,14 +25,31 @@
 package com.ideasense.itr.protocol;
 
 import net.sf.jml.*;
+import net.sf.jml.message.*;
+import net.sf.jml.util.StringUtils;
 import net.sf.jml.event.*;
 import net.sf.jml.protocol.MsnOutgoingMessage;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.LogManager;
 
 /**
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
 public class MockMsnMessengerImpl implements MsnMessenger {
 
+  private static final Logger LOG =
+      LogManager.getLogger(MockMsnMessengerImpl.class);
+
+  private List<MsnMessengerListener> mMessengerListeners =
+      new ArrayList<MsnMessengerListener>();
+  private List<MsnMessageListener> mMessageListeners =
+      new ArrayList<MsnMessageListener>();
+  private List<MsnContactListListener> mContactListeners =
+      new ArrayList<MsnContactListListener>();
 
   public Object getAttachment() {
     return null;
@@ -91,7 +108,7 @@ public class MockMsnMessengerImpl implements MsnMessenger {
   }
 
   public void login() {
-
+    fireLoginCompleted();
   }
 
   public void logout() {
@@ -119,27 +136,27 @@ public class MockMsnMessengerImpl implements MsnMessenger {
   }
 
   public void addMessengerListener(MsnMessengerListener pMsnMessengerListener) {
-
+    mMessengerListeners.add(pMsnMessengerListener);
   }
 
   public void removeMessengerListener(MsnMessengerListener pMsnMessengerListener) {
-
+    mMessengerListeners.remove(pMsnMessengerListener);
   }
 
   public void addMessageListener(MsnMessageListener pMsnMessageListener) {
-
+    mMessageListeners.add(pMsnMessageListener);
   }
 
   public void removeMessageListener(MsnMessageListener pMsnMessageListener) {
-
+    mMessageListeners.remove(pMsnMessageListener);
   }
 
   public void addContactListListener(MsnContactListListener pMsnContactListListener) {
-
+    mContactListeners.add(pMsnContactListListener);
   }
 
   public void removeContactListListener(MsnContactListListener pMsnContactListListener) {
-
+    mContactListeners.remove(pMsnContactListListener);
   }
 
   public void addSwitchboardListener(MsnSwitchboardListener pMsnSwitchboardListener) {
@@ -159,7 +176,7 @@ public class MockMsnMessengerImpl implements MsnMessenger {
   }
 
   public void sendText(Email pEmail, String pString) {
-
+    LOG.debug("Sending text message - " + "(to: "+pEmail+", "+pString+")" );
   }
 
   public void addGroup(String pString) {
@@ -203,6 +220,61 @@ public class MockMsnMessengerImpl implements MsnMessenger {
   }
 
   public void renameFriend(Email pEmail, String pString) {
+
+  }
+
+  public void fireLoginCompleted() {
+    LOG.debug("Notify msn messenger listeners about login complete.");
+    for (final MsnMessengerListener msnMessengerListener : mMessengerListeners)
+    {
+      msnMessengerListener.loginCompleted(this);
+    }
+  }
+
+  public void fireLogout() {
+    LOG.debug("Notify msn messenger listeners about logout.");
+    for (final MsnMessengerListener msnMessengerListener : mMessengerListeners)
+    {
+      msnMessengerListener.logout(this);
+    }
+  }
+
+  public void fireExceptionCaught(Throwable pThrowable) {
+    LOG.debug("Notify msn messenger listeners about exception caught.");
+    for (final MsnMessengerListener msnMessengerListener : mMessengerListeners)
+    {
+      msnMessengerListener.exceptionCaught(this, pThrowable);
+    }
+  }
+
+
+  public void fireInstantMessageReceived(MsnSwitchboard pMsnSwitchboard,
+                                         MsnInstantMessage pMsnInstantMessage,
+                                         MsnContact pMsnContact) {
+    LOG.debug("Notify instance message recieved.");
+    for (final MsnMessageListener listener : mMessageListeners) {
+      listener.instantMessageReceived(pMsnSwitchboard,  pMsnInstantMessage,
+          pMsnContact);
+    }
+  }
+
+  public void fireControlMessageReceived(MsnSwitchboard pMsnSwitchboard, MsnControlMessage pMsnControlMessage, MsnContact pMsnContact) {
+    LOG.debug("Notify control message recieved.");
+    for (final MsnMessageListener listener : mMessageListeners) {
+      listener.controlMessageReceived(pMsnSwitchboard,  pMsnControlMessage,
+          pMsnContact);
+    }
+  }
+
+  public void fireSystemMessageReceived(MsnMessenger pMsnMessenger, MsnSystemMessage pMsnSystemMessage) {
+
+  }
+
+  public void fireDatacastMessageReceived(MsnSwitchboard pMsnSwitchboard, MsnDatacastMessage pMsnDatacastMessage, MsnContact pMsnContact) {
+
+  }
+
+  public void fireUnknownMessageReceived(MsnSwitchboard pMsnSwitchboard, MsnUnknownMessage pMsnUnknownMessage, MsnContact pMsnContact) {
 
   }
 }

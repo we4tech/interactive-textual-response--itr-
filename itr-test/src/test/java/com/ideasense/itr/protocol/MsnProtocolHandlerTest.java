@@ -31,6 +31,10 @@ import com.ideasense.itr.base.service.ObjectInstanceService;
 import com.ideasense.itr.common.configuration.ProtocolConfiguration;
 
 import java.net.ProtocolException;
+import java.lang.reflect.Proxy;
+
+import impl.com.ideasense.itr.protocol.MSNProtocolHandlerImpl;
+import net.sf.jml.MsnMessenger;
 
 /**
  * Test msn implementations.
@@ -39,7 +43,7 @@ import java.net.ProtocolException;
 public class MsnProtocolHandlerTest extends TestCase {
 
   private static final Logger LOG = LogManager.getLogger(MsnProtocolHandlerTest.class);
-  private ProtocolHandler mMsnProtocolHandler;
+  private MSNProtocolHandlerImpl mMsnProtocolHandler;
 
   @Override
   protected void setUp() throws Exception {
@@ -54,13 +58,26 @@ public class MsnProtocolHandlerTest extends TestCase {
     configuration.setUserAccount("hasan@somewherein.net");
     configuration.setUserPassword("nhmthk");
     mMsnProtocolHandler =
-        ObjectInstanceService.newMsnProtocolHandler(configuration);
-    // Set debug proxy
-    
+        (MSNProtocolHandlerImpl) ObjectInstanceService.
+            newMsnProtocolHandler(configuration);
+
+    // Create MOck msn messenger
+    MockMsnMessengerImpl mockMsnMessenger = new MockMsnMessengerImpl();
+    DebugProxy debugProxy = new DebugProxy(mockMsnMessenger);
+    mMsnProtocolHandler.setMockMessengerImpl(
+        (MsnMessenger) Proxy.newProxyInstance(getClass().getClassLoader(),
+        mockMsnMessenger.getClass().getInterfaces(), debugProxy));
+
   }
 
   public void testConnect() throws ProtocolException, InterruptedException {
     mMsnProtocolHandler.connectServer();
-    Thread.sleep(34000);
+    assertTrue(mMsnProtocolHandler.isConnected());
+
+    fixSendMessage();
+  }
+
+  private void fixSendMessage() {
+//    mMsnProtocolHandler.s
   }
 }
