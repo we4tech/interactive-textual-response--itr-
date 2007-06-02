@@ -49,6 +49,7 @@ import nu.xom.*;
 public class ITRMappingProcessor {
 
   private final Logger LOG = LogManager.getLogger(getClass());
+  private final boolean DEBUG = LOG.isDebugEnabled();
 
   private static final String ELEMENT_COMPANIES = "Companies";
   private static String ElEMENT_COMPANY = "company";
@@ -85,7 +86,7 @@ public class ITRMappingProcessor {
    * @param pConfigurationInputStream input stream of configuration xml file.
    */
   public ITRMappingProcessor(final InputStream pConfigurationInputStream) {
-    if (LOG.isDebugEnabled()) {
+    if (DEBUG) {
       LOG.debug("Constructing ITRMappingProcessor, configuration stream - " +
                 pConfigurationInputStream);
     }
@@ -98,7 +99,7 @@ public class ITRMappingProcessor {
       Builder builder = new Builder();
       Document document = builder.build(pConfigurationInputStream);
       Element rootElement = document.getRootElement(); // ITR-mapping
-      if (LOG.isDebugEnabled()) {
+      if (DEBUG) {
         LOG.debug("Root element - " + rootElement);
       }
       // Find out companies
@@ -147,7 +148,7 @@ public class ITRMappingProcessor {
             company.setServiceNavigationTree(
                 importNavigation(companyElement.
                                  getAttributeValue(ATTR_IMPORT)));
-            if (LOG.isDebugEnabled()) {
+            if (DEBUG) {
               LOG.debug("Adding company - " + company);
             }
             companyList.add(company);
@@ -204,18 +205,17 @@ public class ITRMappingProcessor {
       pRootItem.setKey(DEFAULT_INDEX);
       pRootItem.setValue(null);
       navigationTree.addRoot(pRootItem);
-      recursivlyFindIndex(pRootItem, serviceIndexElement);
+      findIndexRecursivly(pRootItem, serviceIndexElement);
 
       // Set navigation tree.
       serviceNavigationTree.setNavigableTree(navigationTree);
     } else {
       LOG.warn("Service index is not defined.");
     }
-
     return serviceNavigationTree;
   }
 
-  private void recursivlyFindIndex(
+  private void findIndexRecursivly(
       final NavigableTree.TreeItem<String, Index> pParent,
       final Element pElement) {
     LOG.debug("Recursivly looking for index object");
@@ -236,23 +236,32 @@ public class ITRMappingProcessor {
           item.setValue(index);
           pParent.addChildItem(item);
           // Look for more depth value.
-          recursivlyFindIndex(item, indexElement);
+          findIndexRecursivly(item, indexElement);
         }
       }
     }
   }
 
   private Response findResponse(final Element pElement) {
+    if (DEBUG) {
+      LOG.debug("Find response object from Element - " + pElement);
+    }
     final Response response = new Response();
     // find echo
     final Element echoElement = pElement.getFirstChildElement(ELEMENT_ECHO);
     if (echoElement != null) {
+      if (DEBUG) {
+        LOG.debug("Echo element - " + echoElement);
+      }
       response.setContent(echoElement.getValue());
       response.setType(Response.Type.ECHO);
     } else {
       // find plug-in
       final Element pluginElement =
           pElement.getFirstChildElement(ELEMENT_PLUG_IN);
+      if (DEBUG) {
+        LOG.debug("Plugin element - " + pluginElement);
+      }
       if (pluginElement != null) {
         LOG.debug("Plugin element found.");
         String url = pElement.getValue().trim();

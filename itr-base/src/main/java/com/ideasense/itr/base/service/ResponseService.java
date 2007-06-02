@@ -40,6 +40,5 @@ public interface ResponseService {
    * @return {@code String} response for client.
    * @param pVisitor ITR visitor object.
    */
-  public String prepareResponse(final ITRVisitor pVisitor,
-                                final Response pResponse);
+  public String prepareResponse(final ITRVisitor pVisitor);
 }

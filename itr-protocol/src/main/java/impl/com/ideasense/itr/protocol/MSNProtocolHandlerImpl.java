@@ -27,37 +27,48 @@ package impl.com.ideasense.itr.protocol;
 import com.ideasense.itr.protocol.AbstractProtocolHandler;
 import com.ideasense.itr.common.configuration.ProtocolConfiguration;
 import com.ideasense.itr.base.navigation.ITRVisitor;
+import com.ideasense.itr.base.navigation.Response;
 import com.ideasense.itr.base.service.ObjectInstanceService;
 import com.ideasense.itr.base.service.ITRVisitorService;
 import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
 import net.sf.jml.event.MsnMessengerListener;
 import net.sf.jml.event.MsnMessageListener;
-import net.sf.jml.MsnMessenger;
-import net.sf.jml.MsnSwitchboard;
-import net.sf.jml.MsnContact;
+import net.sf.jml.event.MsnContactListListener;
+import net.sf.jml.*;
+import net.sf.jml.util.JmlConstants;
 import net.sf.jml.message.*;
 import net.sf.jml.impl.MsnMessengerFactory;
 
 import java.net.ProtocolException;
+import java.util.StringTokenizer;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Implementation of {@code ProtocolHandler} for MSN protocol.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
 public class MSNProtocolHandlerImpl extends AbstractProtocolHandler
-    implements MsnMessengerListener, MsnMessageListener {
+    implements MsnMessengerListener, MsnMessageListener, MsnContactListListener
+{
 
   /**
    * Logger instance for the whole class.
    */
   private static final Logger LOG =
       LogManager.getLogger(MSNProtocolHandlerImpl.class);
+
+  private static final String LINE_SEPARATOR = "\r\n";
+
+  /**
+   * Unauthorized access message.
+   */
+  private static final String KEY_UNAUTHORIZED = "unauth.user";
   /**
    * State of debug enable.
    */
   private final boolean DEBUG = LOG.isDebugEnabled();
-
   /**
    * Flag for maintaining logging status.
    */
@@ -125,6 +136,8 @@ public class MSNProtocolHandlerImpl extends AbstractProtocolHandler
   private void subscribeEventListeners() {
     LOG.debug("Setting up event listeners for msn messenger.");
     mMsnMessenger.addMessengerListener(this);
+    mMsnMessenger.addMessageListener(this);
+    mMsnMessenger.addContactListListener(this);
   }
 
   //------------------- Messenger state control
@@ -175,16 +188,18 @@ public class MSNProtocolHandlerImpl extends AbstractProtocolHandler
     if (pMessage != null) {
       LOG.debug("Creating new visitor to walk through the navigation tree.");
       ITRVisitor visitor = ObjectInstanceService.newVisitor();
-      visitor.setCommand(pMessage.getContent());
+      // Parse message content to command and paramars
+      // first string token is treated as command and rest of the tokens
+      // are treated as comm params.
+      prepareCommandAndParams(pMessage, visitor);
       visitor.setName(pMsnContact.getId());
       if (mVisitorService.
           isVisitorAccepted(mProtocolConfiguration.getCompany(), visitor)) {
         if (DEBUG) {
           LOG.debug("Visitor accepted - " + visitor);
         }
-        // Accepte user request now let her navigate the service.
-        mVisitorService.acceptVisitor(
-            mProtocolConfiguration.getCompany(), visitor);
+        // Send response to the client messenger.
+        sendMessage(visitor, pMsnSwitchboard);
       } else {
         if (DEBUG) {
           LOG.debug("Visitor denied - " + visitor);
@@ -192,6 +207,59 @@ public class MSNProtocolHandlerImpl extends AbstractProtocolHandler
         sendDenialMessage(ErrorType.NOT_ACCEPTED, pMsnSwitchboard,
                           pMessage, pMsnContact);
       }
+    }
+  }
+
+  private void sendMessage(final ITRVisitor pVisitor,
+                           final MsnSwitchboard pMsnSwitchboard) {
+    if (DEBUG) {
+      LOG.debug("Sending message to the visitor - " + pVisitor);
+    }
+    pMsnSwitchboard.sendText(processResponseText(pVisitor));
+  }
+
+  private String processResponseText(final ITRVisitor pVisitor) {
+    if (DEBUG) {
+      LOG.debug("Process response text for visitor - " + pVisitor);
+    }
+    // Accepte user request now let her navigate the service.
+    mVisitorService.acceptVisitor(mProtocolConfiguration.getCompany(),
+                                  pVisitor);
+    // Retrieve Navigation textual result content.
+    return ObjectInstanceService.getResponseService().prepareResponse(pVisitor);
+  }
+
+  /**
+   * First string token is treated as command and rest of tokens are treated
+   * as parameters.
+   * @param pMessage instance message object.
+   * @param pVisitor messenger client who is visiting the navigation tree.
+   */
+  private void prepareCommandAndParams(final MsnInstantMessage pMessage,
+                                       final ITRVisitor pVisitor) {
+    if (pMessage == null) {
+      throw new IllegalArgumentException(
+          "MsnInstanceMessage object is required.");
+    }
+    if (DEBUG) {
+      LOG.debug("Prepare command and params from - " + pMessage.getContent());
+    }
+    final String messageContent = pMessage.getContent();
+    if (messageContent != null) {
+      final StringTokenizer stringTokenizer =
+          new StringTokenizer(messageContent);
+      // Set command
+      if (stringTokenizer.hasMoreTokens()) {
+        pVisitor.setCommand(stringTokenizer.nextToken());
+      }
+      // Set parameters
+      final List<String> commandParams = new ArrayList<String>();
+      while (stringTokenizer.hasMoreTokens()) {
+        commandParams.add(stringTokenizer.nextToken());
+      }
+      pVisitor.setCommadParams(commandParams);
+    } else {
+      LOG.debug("Instance Message content is empty.");
     }
   }
 
@@ -204,8 +272,9 @@ public class MSNProtocolHandlerImpl extends AbstractProtocolHandler
     }
     switch (pErrorCode) {
       case NOT_ACCEPTED:
-        pMsnSwitchboard.sendText("You are not accepted." +
-            " perhaps you are in you our block list.");
+        pMsnSwitchboard.sendText(new StringBuilder().
+            append(ObjectInstanceService.getText(KEY_UNAUTHORIZED)).
+            append(LINE_SEPARATOR).toString());
         break;
     }
   }
@@ -243,6 +312,57 @@ public class MSNProtocolHandlerImpl extends AbstractProtocolHandler
                 pMsnContact);
     }
   }
+
+  //------------------ Msn Contact list listener
+  public void contactListSyncCompleted(MsnMessenger pMsnMessenger) {
+  }
+
+  public void contactListInitCompleted(MsnMessenger pMsnMessenger) {
+  }
+
+  public void contactStatusChanged(MsnMessenger pMsnMessenger,
+                                   MsnContact pMsnContact) {
+  }
+
+  public void ownerStatusChanged(MsnMessenger pMsnMessenger) {
+  }
+
+  public void contactAddedMe(MsnMessenger pMsnMessenger,
+                             MsnContact pMsnContact) {
+    if (DEBUG) {
+      LOG.debug("Add new buddy - " + pMsnContact);
+    }
+    pMsnMessenger.addFriend(pMsnContact.getEmail(), pMsnContact.getId());
+    if (DEBUG) {
+      LOG.debug("New buddy added - " + pMsnContact.getId());
+    }
+  }
+
+  public void contactRemovedMe(MsnMessenger pMsnMessenger,
+                               MsnContact pMsnContact) {
+
+  }
+
+  public void contactAddCompleted(MsnMessenger pMsnMessenger,
+                                  MsnContact pMsnContact) {
+
+  }
+
+  public void contactRemoveCompleted(MsnMessenger pMsnMessenger,
+                                     MsnContact pMsnContact) {
+
+  }
+
+  public void groupAddCompleted(MsnMessenger pMsnMessenger,
+                                MsnGroup pMsnGroup) {
+
+  }
+
+  public void groupRemoveCompleted(MsnMessenger pMsnMessenger,
+                                   MsnGroup pMsnGroup) {
+
+  }
+
 
   //------------------- Daemon control related services.
   /**

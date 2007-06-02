@@ -24,14 +24,23 @@
 */
 package com.ideasense.itr.base.navigation;
 
+import java.util.Calendar;
+import java.util.Locale;
+
 /**
  * Render different type of textual response. echo|color| etc..
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
 public class Response {
 
+  private static final String FORMAT_TIME = "\\$\\{time\\}";
+  private static final String FORMAT_DATE = "\\$\\{date\\}";
+  private static final String FORMAT_DATE_TIME = "\\${dateTime}";
+
+  private final Calendar mCalendar = Calendar.getInstance();
   private Type type;
   private String content;
+
   /**
    * Optionally, navigation response content can be set.
    */
@@ -46,6 +55,15 @@ public class Response {
   }
 
   public String getContent() {
+    if (content != null) {
+      return formatContent();
+    }
+    return null;
+  }
+
+  private String formatContent() {
+    content = content.replaceAll(FORMAT_TIME, mCalendar.getTime().toString());
+    content = content.replaceAll(FORMAT_DATE, mCalendar.getTime().toString());
     return content;
   }
 

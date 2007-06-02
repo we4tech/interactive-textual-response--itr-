@@ -5,37 +5,57 @@
      xsi:schemaLocation="http://idea-sense.com/navigation navigation.xsd"
     -->
 <Navigation>
+  <InvalidResponse>
+
+  </InvalidResponse>
   <!--+
       | This message is printed as welcome message, when user enter the messenger
       | or send the first message.
       +-->
   <Service-welcome-message>
-    <echo><![CDATA[
-  Welcome to IDEASense ITR service.
-  Right now - ${time} and today - ${date}.
-  ]]></echo>
+    <echo>
+      স্বগতম IDEASense এর ITR service এ ।
+      এখন বাজে - ${date}
+    </echo>
   </Service-welcome-message>
 
   <!--+
       | List of available services
       +-->
   <Service-index>
-    <Index keyCode="1" title="What is the time right now?">
+    <Index keyCode="ক" title="এখন কয়টা বাজে?">
       <echo>
-        Right now - ${time}
+        এখন বাজে- ${time}
       </echo>
     </Index>
-    <Index keyCode="2" title="Test recursive service.">
-      <Index keyCode="a" title="Node 2.1"/>
-      <Index keyCode="b" title="Node 2.2">
-        <Index keyCode="i" title="Node 2.2.1">
+    <Index keyCode="খ" title="বাংলা টেস্ট সারভিস">
+      <echo>টেস্ট করলাম, এখন কেমন লাগল :)</echo>
+
+      <Index keyCode="গ" title="ITR কি?">
+        <echo><![CDATA[
+        ITR হল Iteractive Textual Response.
+        ]]></echo>
+      </Index>
+      <Index keyCode="ঘ" title="কি কাজে ব্যবহার হতে পারে?">
+        <echo>
+          আপনার কম্পানির সারভিসITR এর সাহায্যে iteractivly উপস্থপন করতে পারেন
+        </echo>
+        <Index keyCode="ঙ" title="এটা কি open source?">
           <echo>
-            Test message.
+            আসা করি তারা তারি এটা ওপেন সোর্স করা হেব
           </echo>
         </Index>
       </Index>
-      <Index keyCode="c" title="Node 2.3">
-        <plug-in>http://localhost/test.php</plug-in>
+      <Index keyCode="চ" title="plug-in টা কিভাবে সাপর্ট করে?">
+        <Index keyCode="১" title="একটা উদাহরন স্বরুপ দেখাও?">
+          <echo><![CDATA[
+            এই টেগ টা ব্যবহার করতে হবে <Index/> ট্যগ এর মধ্যে-
+            <plug-in>http://localhost/test.php</plug-in>
+          ]]></echo>
+        </Index>
+        <Index keyCode="২" title="সত্যিকারের একটা plug-in রান করে দেখাও">
+          <plug-in>http://localhost/test.php</plug-in>
+        </Index>
       </Index>
     </Index>
   </Service-index>

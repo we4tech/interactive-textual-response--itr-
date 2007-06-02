@@ -25,6 +25,7 @@
 package impl.com.ideasense.itr.base.service;
 
 import com.ideasense.itr.base.service.ResponseService;
+import com.ideasense.itr.base.service.ObjectInstanceService;
 import com.ideasense.itr.base.navigation.ITRVisitor;
 import com.ideasense.itr.base.navigation.Response;
 import org.apache.log4j.Logger;
@@ -42,39 +43,53 @@ import java.io.InputStream;
 public class ResponseServiceImpl implements ResponseService {
 
   private final Logger LOG = LogManager.getLogger(ResponseServiceImpl.class);
+  private static final String LINE_SEPARATOR = "\r\n";
+  /**
+   * Invalid message language text.
+   */
+  private static final String KEY_INVALID_MESSAGE = "invalid.message";
 
-  public String prepareResponse(final ITRVisitor pVisitor, final Response pResponse) {
+  public String prepareResponse(final ITRVisitor pVisitor) {
     LOG.debug("Preparing response for - " + pVisitor);
-    if (pVisitor == null || pResponse == null) {
+    final Response response = pVisitor.getResponse();
+    if (response == null) {
       throw new IllegalArgumentException("Visitor or Response object must " +
                                          "be not null.");
     }
-    // Build response.
-    final StringBuilder builder = new StringBuilder();
-    // Handle response based on response type.
-    switch (pResponse.getType()) {
-      case ECHO:
-        builder.append("\r\n>>>\t").
-                append(formatString(pResponse.getContent())).append("\r\n");
-        break;
-      case PLUGIN:
-        try {
-          builder.append(findPluginResponse(pVisitor, pResponse.getContent()));
-        } catch (Exception e) {
-          LOG.warn("Failed to find response from plugin - ", e);
-          builder.append("Error found - ").append(e.getMessage());
+    // Build response textual content
+    final StringBuilder buffer = new StringBuilder();
+    buffer.append("__");
+    // Set welcome message
+//    buffer.append(pVisitor.getWelcomeMessage().getContent());
+//    buffer.append(LINE_SEPARATOR);
+    // Prepare response message
+    if (pVisitor.getCommand() == null) {
+      buffer.append(response.getNavigation());
+    } else {
+      final String content = response.getContent();
+      if (content == null) {
+        buffer.append(ObjectInstanceService.getText(KEY_INVALID_MESSAGE));
+        buffer.append(LINE_SEPARATOR);
+        buffer.append(response.getNavigation());
+      } else {
+        // Handle response based on response type.
+        switch (response.getType()) {
+          case ECHO:
+            buffer.append(response.getContent()).append(LINE_SEPARATOR);
+            break;
+          case PLUGIN:
+            try {
+              buffer.append(findPluginResponse(pVisitor,
+                                               response.getContent()));
+            } catch (Exception e) {
+              LOG.warn("Failed to find response from plugin - ", e);
+              buffer.append("Error found - ").append(e.getMessage());
+            }
+            break;
         }
-        break;
+      }
     }
-
-    // if navgation is not empty attach it with the output.
-    String navigation = pResponse.getNavigation();
-    if (navigation != null) {
-      builder.append("-----------------------------\r\n");
-      builder.append(navigation);
-      builder.append("-----------------------------\r\n");
-    }
-    return builder.toString();
+    return buffer.toString();
   }
 
   private String formatString(final String pContent) {
@@ -93,6 +108,7 @@ public class ResponseServiceImpl implements ResponseService {
     // Send rquest to server
     URI pluginURI = new URI(buildUrl);
     URL pluginUrl = pluginURI.toURL();
+    // Set parameters
     URLConnection urlConnection = pluginUrl.openConnection();
     InputStream inputStream = urlConnection.getInputStream();
     StringBuilder builder = new StringBuilder();

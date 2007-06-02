@@ -35,6 +35,11 @@ import impl.com.ideasense.itr.protocol.MSNProtocolHandlerImpl;
 import com.ideasense.itr.base.navigation.ITRVisitor;
 import com.ideasense.itr.protocol.ProtocolHandler;
 import com.ideasense.itr.common.configuration.ProtocolConfiguration;
+import com.ideasense.itr.common.helper.ResourceLocator;
+
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * A singleton container, which create instance of certain services and inject
@@ -45,13 +50,18 @@ public class ObjectInstanceService {
 
   private static final ObjectInstanceService INSTANCE =
       new ObjectInstanceService();
+  /**
+   * Language textual file location on classpath.
+   */
+  private static final String TEXT_PROPERTIES_RESOURCE =
+      "language/text.properties";
 
   private final Logger LOG = LogManager.getLogger(getClass());
   private final ConfigurationService mConfigurationService;
   private final NavigationService mNavigationService;
   private final ITRVisitorService mItrVisitorService;
   private final ResponseService mResponseService;
-
+  private Properties mTextProperties;
 
   /**
    * Default constructor, it creates all instance of objects.
@@ -62,6 +72,21 @@ public class ObjectInstanceService {
     mNavigationService = newNavigationService();
     mItrVisitorService = newItrVisitorService();
     mResponseService = newResponseService();
+    mTextProperties = newTextProperties();
+  }
+
+  private Properties newTextProperties() {
+    mTextProperties = new Properties();
+    final InputStream inputStream =
+        ResourceLocator.getInputStream(TEXT_PROPERTIES_RESOURCE);
+    try {
+      mTextProperties.load(inputStream);
+      inputStream.close();
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to intiate language properties " +
+            "file, it suppose to keep on - " + TEXT_PROPERTIES_RESOURCE, e);
+    }
+    return mTextProperties;
   }
 
   private ResponseService newResponseService() {
@@ -124,5 +149,15 @@ public class ObjectInstanceService {
   public static ProtocolHandler newMsnProtocolHandler(
       final ProtocolConfiguration pConfiguration) {
     return new MSNProtocolHandlerImpl(pConfiguration);
+  }
+
+  /**
+   * Return property value from {@code mTextProperties} member variables,
+   * which is intiated on class construction time.
+   * @param pKey language text property key.
+   * @return value of property.
+   */
+  public static String getText(final String pKey) {
+    return INSTANCE.mTextProperties.getProperty(pKey);
   }
 }

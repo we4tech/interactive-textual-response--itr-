@@ -22,49 +22,45 @@
  * $LastChangedRevision$
  ******************************************************************************
 */
-package com.ideasense.itr.test.base.service;
+package com.ideasense.itr.protocol;
 
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
 import com.ideasense.itr.base.service.ObjectInstanceService;
-import com.ideasense.itr.base.service.NavigationService;
-import com.ideasense.itr.base.service.ITRVisitorService;
-import com.ideasense.itr.base.service.ResponseService;
-import com.ideasense.itr.base.navigation.ITRVisitor;
-import com.ideasense.itr.base.navigation.Response;
+import com.ideasense.itr.common.configuration.ProtocolConfiguration;
+
+import java.net.ProtocolException;
 
 /**
- * Test interaction between client and service
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
-public class ITRVisitorServiceTest extends TestCase {
+public class MsnProtocolHandlerTest2 extends TestCase {
 
   private static final Logger LOG =
-      LogManager.getLogger(ITRVisitorServiceTest.class);
-  private static final String COMPANY_NAME = "ideasense";
+      LogManager.getLogger(MsnProtocolHandlerTest2.class);
 
-  private final ITRVisitorService mItrVisitorService =
-      ObjectInstanceService.getVisitorService();
-  private final ResponseService mResponseService =
-      ObjectInstanceService.getResponseService();
+  private ProtocolHandler mProtocolHandler;
 
-  public void testClient() {
-    String visitorCommandText = "";
-    ITRVisitor visitor = ObjectInstanceService.newVisitor();
-    visitor.setCommand(visitorCommandText);
-    LOG.debug("Visitor - " + visitor);
+  @Override
+  protected void setUp() throws Exception {
+    super.setUp();
+    ProtocolConfiguration configuration = new ProtocolConfiguration();
+    configuration.setCompany("ideasense");
+    configuration.setType(ProtocolConfiguration.Protocol.MSN);
+    configuration.setUserAccount("hasan@somewherein.net");
+    configuration.setUserPassword("nhmthk");
+    mProtocolHandler =
+        ObjectInstanceService.newMsnProtocolHandler(configuration);
+    LOG.debug("Initiated Protocol handler.");
+  }
 
-    assertTrue("Visitor is not accepted",
-        mItrVisitorService.isVisitorAccepted(COMPANY_NAME, visitor));
-    mItrVisitorService.acceptVisitor(COMPANY_NAME, visitor);
-    Response response = visitor.getResponse();
-    assertNotNull(response);
-    LOG.debug("Resonse - " + response);
-
-    // Generate response
-    String responseString = mResponseService.prepareResponse(visitor);
-    assertNotNull(responseString);
-    LOG.debug("Response - " + responseString);
+  public void testConnect() throws ProtocolException, InterruptedException {
+    LOG.debug("Test connecting protocol.");
+    mProtocolHandler.connectServer();
+    while (true) {
+      Thread.sleep(54000);
+    }
+//    assertTrue(mProtocolHandler.isConnected());
   }
 }

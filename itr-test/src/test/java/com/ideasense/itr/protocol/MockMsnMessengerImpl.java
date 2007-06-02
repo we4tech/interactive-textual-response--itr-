@@ -251,7 +251,7 @@ public class MockMsnMessengerImpl implements MsnMessenger {
   public void fireInstantMessageReceived(MsnSwitchboard pMsnSwitchboard,
                                          MsnInstantMessage pMsnInstantMessage,
                                          MsnContact pMsnContact) {
-    LOG.debug("Notify instance message recieved.");
+    LOG.debug("Notify instance message recieved. ["+mMessageListeners+"]");
     for (final MsnMessageListener listener : mMessageListeners) {
       listener.instantMessageReceived(pMsnSwitchboard,  pMsnInstantMessage,
           pMsnContact);

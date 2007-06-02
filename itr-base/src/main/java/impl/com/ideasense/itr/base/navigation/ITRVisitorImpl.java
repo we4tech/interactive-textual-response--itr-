@@ -41,10 +41,15 @@ public class ITRVisitorImpl implements ITRVisitor {
 
   private static final Logger LOG = LogManager.getLogger(ITRVisitorImpl.class);
 
+  /**
+   * Whitespace to display hierarchical view.
+   */
+  private static final String SPACE_CHAR = "  ";
+
   private boolean mVisitMore = true;
   private String mCommand;
   private Response mWelcomeMessage;
-  private Response mResponse;
+  private Response mResponse = new Response();
   private boolean mNullCommand = false;
   private final StringBuilder mNavigationResponseBuilder = new StringBuilder();
   private final StringBuilder mBlankStringBuilder = new StringBuilder();
@@ -68,12 +73,17 @@ public class ITRVisitorImpl implements ITRVisitor {
     if (!mNullCommand && index != null
         && mCommand.equalsIgnoreCase(index.getKeyCode())) {
       mResponse = index.getResponse();
-      mVisitMore = false;
       if (LOG.isDebugEnabled()) {
         LOG.debug("Index match with '"+ mCommand +"'. generating response - " +
                   mResponse);
       }
-    } else if (index != null) {
+      // Stop for iterating next item
+      if (mResponse != null && mResponse.getContent() != null) {
+        LOG.debug("Stopped from traversing next item.");
+        mVisitMore = false;
+      }
+    }
+    if (index != null) {
       // Generate Navigation bookmark.
       mNavigationResponseBuilder.append(generateSpaceForEach(pLevel)).
                        append(index.getKeyCode()).append(".\t").
@@ -85,7 +95,7 @@ public class ITRVisitorImpl implements ITRVisitor {
     // Clear string builder
     mBlankStringBuilder.replace(0, mBlankStringBuilder.length(), "");
     for (int i = 0; i < pLevel; i++) {
-      mBlankStringBuilder.append("-");
+      mBlankStringBuilder.append(SPACE_CHAR);
     }
     return mBlankStringBuilder.toString();
   }
