@@ -24,14 +24,12 @@
 */
 package impl.com.ideasense.itr.base.navigation;
 
-import com.ideasense.itr.base.navigation.ITRVisitor;
-import com.ideasense.itr.base.navigation.Index;
-import com.ideasense.itr.base.navigation.Response;
-import com.ideasense.itr.base.navigation.NavigableTree;
+import com.ideasense.itr.base.navigation.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of {@code ITRVisitor}.
@@ -55,6 +53,8 @@ public class ITRVisitorImpl implements ITRVisitor {
   private final StringBuilder mBlankStringBuilder = new StringBuilder();
   private List<String> mCommandParams;
   private String mName;
+  private Map<ServiceNavigationTree.ResponseType, Response> mErrorMessageMap;
+  private String mLanguageCode = "";
 
   /**
    * {@inheritDoc}
@@ -64,15 +64,15 @@ public class ITRVisitorImpl implements ITRVisitor {
   public void visit(final int pLevel,
                     final NavigableTree.TreeItem<String, Index> pTreeItem) {
     LOG.debug("Level - " + pLevel);
-    if (mResponse == null && (mCommand == null || mCommand.length() == 0)) {
-      mResponse = mWelcomeMessage;
-      mNullCommand = (mCommand == null || mCommand.length() == 0);
+    if (mCommand == null || mCommand.length() == 0) {
+      setResponse(mWelcomeMessage);
+      mNullCommand = true;
     }
     // Match user request if not null command
     final Index index = pTreeItem.getValue();
     if (!mNullCommand && index != null
         && mCommand.equalsIgnoreCase(index.getKeyCode())) {
-      mResponse = index.getResponse();
+      setResponse(index.getResponse());
       if (LOG.isDebugEnabled()) {
         LOG.debug("Index match with '"+ mCommand +"'. generating response - " +
                   mResponse);
@@ -86,7 +86,7 @@ public class ITRVisitorImpl implements ITRVisitor {
     if (index != null) {
       // Generate Navigation bookmark.
       mNavigationResponseBuilder.append(generateSpaceForEach(pLevel)).
-                       append(index.getKeyCode()).append(".\t").
+                       append(index.getKeyCode()).append(".-").
                        append(index.getTitle()).append("\r\n");
     }
   }
@@ -181,5 +181,28 @@ public class ITRVisitorImpl implements ITRVisitor {
 
   public String getName() {
     return mName;
+  }
+
+  public void setTypedResponseMap(
+      final Map<ServiceNavigationTree.ResponseType, Response> pMap) {
+    mErrorMessageMap = pMap;
+  }
+
+  public Response getTypedResponse(
+      final ServiceNavigationTree.ResponseType pResponseType) {
+    return mErrorMessageMap.get(pResponseType);
+  }
+
+  public void setResponse(final Response pResponse) {
+    pResponse.setLanguageCode(mLanguageCode);
+    mResponse = pResponse;
+  }
+
+  public void setVisitMore(final boolean pState) {
+    mVisitMore = false;
+  }
+
+  public void setLanguageCode(final String pLangCode) {
+    mLanguageCode = pLangCode;
   }
 }

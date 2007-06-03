@@ -24,47 +24,69 @@
 */
 package com.ideasense.itr.base.navigation;
 
+import com.ideasense.itr.common.configuration.ProtocolConfiguration;
+
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Company object for {@code ITRMapping}.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
 public class Company {
 
-  private String name;
-  private String url;
-  private ServiceNavigationTree serviceNavigationTree;
+  private String mName;
+  private String mUrl;
+  private ServiceNavigationTree mServiceNavigationTree;
+  private List<ProtocolConfiguration> mProtocolConfigurations =
+      new ArrayList<ProtocolConfiguration>();
 
   public String getName() {
-    return name;
+    return mName;
   }
 
-  public void setName(final String pName) {
-    name = pName;
+  public Company setName(final String pName) {
+    mName = pName;
+    return this;
   }
 
   public String getUrl() {
-    return url;
+    return mUrl;
   }
 
-  public void setUrl(final String pUrl) {
-    url = pUrl;
+  public Company setUrl(final String pUrl) {
+    mUrl = pUrl;
+    return this;
   }
 
   public ServiceNavigationTree getServiceNavigationTree() {
-    return serviceNavigationTree;
+    return mServiceNavigationTree;
   }
 
-  public void setServiceNavigationTree(final ServiceNavigationTree pServiceNavigationTree) {
-    serviceNavigationTree = pServiceNavigationTree;
+  public Company setServiceNavigationTree(final ServiceNavigationTree pServiceNavigationTree) {
+    mServiceNavigationTree = pServiceNavigationTree;
+    return this;
+  }
+
+  public List<ProtocolConfiguration> getProtocolConfigurations() {
+    return mProtocolConfigurations;
+  }
+
+  public Company setProtocolConfigurations(
+      final List<ProtocolConfiguration> pProtocolConfigurations) {
+    mProtocolConfigurations = pProtocolConfigurations;
+    return this;
   }
 
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("{");
-    builder.append("name: '").append(name).append("',");
-    builder.append("url: '").append(url).append("',");
-    builder.append("serviceNavigationTree: '").append(serviceNavigationTree).
+    builder.append("mName: '").append(mName).append("', ");
+    builder.append("mUrl: '").append(mUrl).append("', ");
+    builder.append("mServiceNavigationTree: '").append(mServiceNavigationTree).
+            append("', ");
+    builder.append("mProtocolConfigurations: '").append(mProtocolConfigurations).
             append("'");
     builder.append("}");
     return builder.toString();

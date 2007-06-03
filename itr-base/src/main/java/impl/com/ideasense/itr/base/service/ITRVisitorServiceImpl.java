@@ -65,7 +65,7 @@ public class ITRVisitorServiceImpl implements ITRVisitorService {
   public boolean isVisitorAccepted(final String pCompanyName,
                                    final ITRVisitor pVisitor) {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Acceptig visitor - " + pVisitor);
+      LOG.debug("Verify acceptance of the visitor - " + pVisitor);
     }
     return true;
   }
@@ -94,6 +94,9 @@ public class ITRVisitorServiceImpl implements ITRVisitorService {
     }
     // Set welcome message to visitor
     pVisitor.setWelcomeMessage(pTree.getWelcomeMessage());
+
+    // Set error message map
+    pVisitor.setTypedResponseMap(pTree.getErrorMessageMap());
 
     // Retrieve root tree
     NavigableTree<String, Index> navigableTree = pTree.getNavigableTree();

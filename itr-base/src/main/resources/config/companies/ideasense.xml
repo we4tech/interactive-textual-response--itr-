@@ -5,16 +5,34 @@
      xsi:schemaLocation="http://idea-sense.com/navigation navigation.xsd"
     -->
 <Navigation>
-  <InvalidResponse>
 
-  </InvalidResponse>
+  <!--+
+      | Interact on different kind of error level.
+      +-->
+  <ResponseMap>
+    <invalidCommandError>
+      <echo>Invalid command found</echo>
+    </invalidCommandError>
+    <internalError>
+      <echo>Internal error occured.</echo>
+    </internalError>
+    <helpCommand>
+      <echo>Help stuff here...</echo>
+    </helpCommand>
+    <systemCommandSuccessful>
+      <echo>Successfully executed your command.</echo>
+    </systemCommandSuccessful>
+    <systemCommandFailed>
+      <echo>Failed to execute your command.</echo>
+    </systemCommandFailed>
+  </ResponseMap>
   <!--+
       | This message is printed as welcome message, when user enter the messenger
       | or send the first message.
       +-->
   <Service-welcome-message>
     <echo>
-      স্বগতম IDEASense এর ITR service এ ।
+      স্বগতম IDEASense এর ITR service এ
       এখন বাজে - ${date}
     </echo>
   </Service-welcome-message>
@@ -23,38 +41,39 @@
       | List of available services
       +-->
   <Service-index>
-    <Index keyCode="ক" title="এখন কয়টা বাজে?">
+    <Index keyCode="1" title="এখন কয়টা বাজে?">
       <echo>
         এখন বাজে- ${time}
       </echo>
     </Index>
-    <Index keyCode="খ" title="বাংলা টেস্ট সারভিস">
+    <Index keyCode="2" title="বাংলা টেস্ট সারভিস">
+      <echo lang="en">Just tested, now how does it look?</echo>
       <echo>টেস্ট করলাম, এখন কেমন লাগল :)</echo>
-
-      <Index keyCode="গ" title="ITR কি?">
+      <Index keyCode="2.1" title="ITR কি?">
         <echo><![CDATA[
-        ITR হল Iteractive Textual Response.
+        ITR হল Interactive Textual Response.
         ]]></echo>
       </Index>
-      <Index keyCode="ঘ" title="কি কাজে ব্যবহার হতে পারে?">
+      <Index keyCode="2.2" title="কি কাজে ব্যবহার হতে পারে?">
         <echo>
-          আপনার কম্পানির সারভিসITR এর সাহায্যে iteractivly উপস্থপন করতে পারেন
+          আপনার কম্পানির সারভিসITR এর সাহায্যে interactivly উপস্থপন করতে পারেন
         </echo>
-        <Index keyCode="ঙ" title="এটা কি open source?">
+        <Index keyCode="2.2.1" title="এটা কি open source?">
           <echo>
             আসা করি তারা তারি এটা ওপেন সোর্স করা হেব
           </echo>
         </Index>
       </Index>
-      <Index keyCode="চ" title="plug-in টা কিভাবে সাপর্ট করে?">
-        <Index keyCode="১" title="একটা উদাহরন স্বরুপ দেখাও?">
+      <Index keyCode="2.3" title="plug-in টা কিভাবে সাপর্ট করে?">
+        <Index keyCode="2.3.1" title="একটা উদাহরন স্বরুপ দেখাও?">
           <echo><![CDATA[
             এই টেগ টা ব্যবহার করতে হবে <Index/> ট্যগ এর মধ্যে-
             <plug-in>http://localhost/test.php</plug-in>
           ]]></echo>
         </Index>
-        <Index keyCode="২" title="সত্যিকারের একটা plug-in রান করে দেখাও">
+        <Index keyCode="2.3.2" title="সত্যিকারের একটা plug-in রান করে দেখাও">
           <plug-in>http://localhost/test.php</plug-in>
+          <plug-in lang="en">http://localhost/test.php</plug-in>
         </Index>
       </Index>
     </Index>

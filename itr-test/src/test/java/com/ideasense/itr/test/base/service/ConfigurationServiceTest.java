@@ -31,6 +31,7 @@ import com.ideasense.itr.base.service.ConfigurationService;
 import com.ideasense.itr.base.service.ObjectInstanceService;
 import com.ideasense.itr.base.navigation.*;
 import com.ideasense.itr.common.configuration.ConfigurationConstant;
+import com.ideasense.itr.common.configuration.ProtocolConfiguration;
 
 import java.util.List;
 
@@ -121,5 +122,16 @@ public class ConfigurationServiceTest extends TestCase {
         recursivlyFindValue(item);
       }
     }
+  }
+
+  public void testAccount() {
+    final Company company =
+        mConfigurationService.getITRMapping().getCompanies().get(0);
+    assertNotNull(company);
+
+    final List<ProtocolConfiguration> protocolConfigurations =
+        company.getProtocolConfigurations();
+    assertNotNull(protocolConfigurations);
+    LOG.debug(protocolConfigurations);
   }
 }

@@ -82,6 +82,9 @@ public class MsnProtocolHandlerTest extends MockObjectTestCase {
         mMockMsnMessenger.getClass().getInterfaces(), debugProxy));
   }
 
+  /**
+   * Test interaction between message command;
+   */
   public void testConnect() throws ProtocolException, InterruptedException {
     mMsnProtocolHandler.connectServer();
     assertTrue(mMsnProtocolHandler.isConnected());
@@ -90,12 +93,19 @@ public class MsnProtocolHandlerTest extends MockObjectTestCase {
 
   private void fixSendMessage() {
     final MsnInstantMessage instanceMessage = new MsnInstantMessage();
-    instanceMessage.setContent("2");
+    instanceMessage.setContent("sys:lang:en");
     final MsnContact msnContact = newMockMsnContact("hasan");
     final MsnSwitchboard msnSwitchboard = newMockMsnSwitchboard();
 
+    // send 1
     mMockMsnMessenger.fireInstantMessageReceived(
         msnSwitchboard, instanceMessage, msnContact);
+
+    instanceMessage.setContent("2");
+    // send 2
+    mMockMsnMessenger.fireInstantMessageReceived(
+        msnSwitchboard, instanceMessage, msnContact);
+
   }
 
   private MsnSwitchboard newMockMsnSwitchboard() {
@@ -108,7 +118,7 @@ public class MsnProtocolHandlerTest extends MockObjectTestCase {
       public Object execute(final Object[] pArgs) {
         LOG.debug("Sending text message.");
         for (Object arg : pArgs) {
-          LOG.debug("Arguments - " + arg);
+          LOG.debug("Response - " + arg);
         }
         return null;
       }

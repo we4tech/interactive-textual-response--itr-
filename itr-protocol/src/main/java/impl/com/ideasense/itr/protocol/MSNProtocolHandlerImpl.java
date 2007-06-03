@@ -186,27 +186,13 @@ public class MSNProtocolHandlerImpl extends AbstractProtocolHandler
                 " from - " + pMsnContact);
     }
     if (pMessage != null) {
-      LOG.debug("Creating new visitor to walk through the navigation tree.");
-      ITRVisitor visitor = ObjectInstanceService.newVisitor();
-      // Parse message content to command and paramars
-      // first string token is treated as command and rest of the tokens
-      // are treated as comm params.
-      prepareCommandAndParams(pMessage, visitor);
-      visitor.setName(pMsnContact.getId());
-      if (mVisitorService.
-          isVisitorAccepted(mProtocolConfiguration.getCompany(), visitor)) {
-        if (DEBUG) {
-          LOG.debug("Visitor accepted - " + visitor);
-        }
-        // Send response to the client messenger.
-        sendMessage(visitor, pMsnSwitchboard);
-      } else {
-        if (DEBUG) {
-          LOG.debug("Visitor denied - " + visitor);
-        }
-        sendDenialMessage(ErrorType.NOT_ACCEPTED, pMsnSwitchboard,
-                          pMessage, pMsnContact);
-      }
+      // Find visitor
+      final ITRVisitor visitor = ObjectInstanceService.
+          getCommandProcessorService().processCommand(
+          mProtocolConfiguration, pMsnContact.getId(), pMessage.getContent());
+
+      // Send response to the client messenger.
+      sendMessage(visitor, pMsnSwitchboard);
     }
   }
 
@@ -222,45 +208,8 @@ public class MSNProtocolHandlerImpl extends AbstractProtocolHandler
     if (DEBUG) {
       LOG.debug("Process response text for visitor - " + pVisitor);
     }
-    // Accepte user request now let her navigate the service.
-    mVisitorService.acceptVisitor(mProtocolConfiguration.getCompany(),
-                                  pVisitor);
     // Retrieve Navigation textual result content.
     return ObjectInstanceService.getResponseService().prepareResponse(pVisitor);
-  }
-
-  /**
-   * First string token is treated as command and rest of tokens are treated
-   * as parameters.
-   * @param pMessage instance message object.
-   * @param pVisitor messenger client who is visiting the navigation tree.
-   */
-  private void prepareCommandAndParams(final MsnInstantMessage pMessage,
-                                       final ITRVisitor pVisitor) {
-    if (pMessage == null) {
-      throw new IllegalArgumentException(
-          "MsnInstanceMessage object is required.");
-    }
-    if (DEBUG) {
-      LOG.debug("Prepare command and params from - " + pMessage.getContent());
-    }
-    final String messageContent = pMessage.getContent();
-    if (messageContent != null) {
-      final StringTokenizer stringTokenizer =
-          new StringTokenizer(messageContent);
-      // Set command
-      if (stringTokenizer.hasMoreTokens()) {
-        pVisitor.setCommand(stringTokenizer.nextToken());
-      }
-      // Set parameters
-      final List<String> commandParams = new ArrayList<String>();
-      while (stringTokenizer.hasMoreTokens()) {
-        commandParams.add(stringTokenizer.nextToken());
-      }
-      pVisitor.setCommadParams(commandParams);
-    } else {
-      LOG.debug("Instance Message content is empty.");
-    }
   }
 
   private void sendDenialMessage(final ErrorType pErrorCode,

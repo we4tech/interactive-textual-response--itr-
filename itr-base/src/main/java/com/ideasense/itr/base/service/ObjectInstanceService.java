@@ -26,10 +26,7 @@ package com.ideasense.itr.base.service;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.LogManager;
-import impl.com.ideasense.itr.base.service.ConfigurationServiceImpl;
-import impl.com.ideasense.itr.base.service.NavigationServiceImpl;
-import impl.com.ideasense.itr.base.service.ITRVisitorServiceImpl;
-import impl.com.ideasense.itr.base.service.ResponseServiceImpl;
+import impl.com.ideasense.itr.base.service.*;
 import impl.com.ideasense.itr.base.navigation.ITRVisitorImpl;
 import impl.com.ideasense.itr.protocol.MSNProtocolHandlerImpl;
 import com.ideasense.itr.base.navigation.ITRVisitor;
@@ -61,6 +58,7 @@ public class ObjectInstanceService {
   private final NavigationService mNavigationService;
   private final ITRVisitorService mItrVisitorService;
   private final ResponseService mResponseService;
+  private final CommandProcessorService mCommandProcessorService;
   private Properties mTextProperties;
 
   /**
@@ -73,6 +71,11 @@ public class ObjectInstanceService {
     mItrVisitorService = newItrVisitorService();
     mResponseService = newResponseService();
     mTextProperties = newTextProperties();
+    mCommandProcessorService = newCommandProcessorService();
+  }
+
+  private CommandProcessorService newCommandProcessorService() {
+    return new CommandProcessorServiceImpl();
   }
 
   private Properties newTextProperties() {
@@ -159,5 +162,13 @@ public class ObjectInstanceService {
    */
   public static String getText(final String pKey) {
     return INSTANCE.mTextProperties.getProperty(pKey);
+  }
+
+  /**
+   * Return implementation instance of {@code CommandProcessorService}.
+   * @return reutrn implementation instance of {@code CommandProcessService}.
+   */
+  public static CommandProcessorService getCommandProcessorService() {
+    return INSTANCE.mCommandProcessorService;
   }
 }

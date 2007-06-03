@@ -25,6 +25,7 @@
 package com.ideasense.itr.base.navigation;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * If Visitor is accepted, {@code visit} method will be invoked
@@ -61,7 +62,19 @@ public interface ITRVisitor {
    */
   public void setCommand(final String pCommand);
 
+  /**
+   * Extra parameters are determined by the user chat message. <br>
+   * first word is counted as command and the rest of the commands are
+   * declared as params. <br>
+   * mostly useful for plugin.
+   * @param pCommandParams set parameters.
+   */
   public void setCommadParams(final List<String> pCommandParams);
+
+  /**
+   * Return list of command parameters.
+   * @return list of command parameters.
+   */
   public List<String> getCommandParams();
 
   /**
@@ -94,4 +107,38 @@ public interface ITRVisitor {
    * @return ITR visitor name.
    */
   public String getName();
+
+  /**
+   * Set error message map.
+   * @param pMap error message map.
+   */
+  public void setTypedResponseMap(
+      final Map<ServiceNavigationTree.ResponseType, Response> pMap);
+
+  /**
+   * Return error message based on it's type.
+   * @param pResponseType error message type.
+   * @return error message.
+   */
+  public Response getTypedResponse(
+      final ServiceNavigationTree.ResponseType pResponseType);
+
+  /**
+   * Set response, it useful when response is injected from other service.
+   * @param pResponse response content in {@code Response} class.
+   */
+  public void setResponse(final Response pResponse);
+
+  /**
+   * Set flag for visit more state. if false set it won't iterate through
+   * objects structure.
+   * @param pState true/false value is accepted.
+   */
+  void setVisitMore(final boolean pState);
+
+  /**
+   * Langauge code.
+   * @param pLangCode language code.
+   */
+  void setLanguageCode(final String pLangCode);
 }

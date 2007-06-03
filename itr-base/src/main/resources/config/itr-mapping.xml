@@ -7,6 +7,14 @@ xmlns="http://idea-sense.com/itr-mapping"
 <ITR-mapping>
   <Companies>
     <company name="ideasense" url="http://idea-sense.com"
-             import="config/companies/ideasense.xml"/>
+             import="config/companies/ideasense.xml">
+      <!--+
+          | Messenger account information, multiple account can be set for
+          | same service.
+          +-->
+      <MessengerInstance>
+        <account userName="itr_test1@hotmail.com" password="hasankhan" type="MSN" />
+      </MessengerInstance>
+    </company>
   </Companies>
 </ITR-mapping>

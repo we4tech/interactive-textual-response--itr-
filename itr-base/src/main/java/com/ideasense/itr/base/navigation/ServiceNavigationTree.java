@@ -24,6 +24,8 @@
 */
 package com.ideasense.itr.base.navigation;
 
+import java.util.Map;
+
 /**
  * A hierarchical presentation of ITR navigation system.
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
@@ -32,6 +34,7 @@ public class ServiceNavigationTree {
 
   private Response mWelcomeResponse;
   private NavigableTree<String, Index> mNavigableTree;
+  private Map<ResponseType, Response> mErrorMessageMap;
 
   public void setWelcomeMessage(final Response pResponse) {
     mWelcomeResponse = pResponse;
@@ -47,6 +50,36 @@ public class ServiceNavigationTree {
 
   public NavigableTree<String, Index> getNavigableTree() {
     return mNavigableTree;
+  }
+
+  public Map<ResponseType, Response> getErrorMessageMap() {
+    return mErrorMessageMap;
+  }
+
+  public Response getErrorMessage(final ResponseType pResponseType) {
+    return mErrorMessageMap.get(pResponseType);
+  }
+
+  public void setErrorMessageMap(final Map<ResponseType, Response> pErrorMap) {
+    mErrorMessageMap = pErrorMap;
+  }
+
+  /**
+   * Declare error type, which is sent to the end ITR user.
+   */
+  public static enum ResponseType {
+    /**
+     * Response on user invalid command.
+     */
+    INVALID_COMMAND,
+    /**
+     * Response when user send 'help' command.
+     */
+    HELP_COMMAND,
+    SUCCESSFUL_SYSTEM_RESPONSE, FAILED_SYSTEM_RESPONSE, /**
+     * Response on internal application error.
+     */
+    INTERNAL
   }
 
   @Override

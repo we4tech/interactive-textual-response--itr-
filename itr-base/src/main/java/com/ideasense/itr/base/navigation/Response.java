@@ -24,11 +24,10 @@
 */
 package com.ideasense.itr.base.navigation;
 
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.*;
 
 /**
- * Render different type of textual response. echo|color| etc..
+ * Render different mType of textual response. echo|color| etc..
  * @author <a href="mailto:hasan@somewherein.net">nhm tanveer hossain khan (hasan)</a>
  */
 public class Response {
@@ -36,39 +35,61 @@ public class Response {
   private static final String FORMAT_TIME = "\\$\\{time\\}";
   private static final String FORMAT_DATE = "\\$\\{date\\}";
   private static final String FORMAT_DATE_TIME = "\\${dateTime}";
+  private static final String DEFAULT_LANG_CODE = "";
 
   private final Calendar mCalendar = Calendar.getInstance();
-  private Type type;
-  private String content;
+  private Type mType;
+  /**
+   * Store multiple language mContent.
+   */
+  private Map<String, String> mContent = new HashMap<String, String>();
 
   /**
-   * Optionally, navigation response content can be set.
+   * Optionally, mNavigation response mContent can be set.
    */
-  private String navigation;
+  private String mNavigation;
+  private String mLanguagecode = DEFAULT_LANG_CODE;
 
   public Type getType() {
-    return type;
+    return mType;
   }
 
   public void setType(final Type pType) {
-    type = pType;
+    mType = pType;
   }
 
   public String getContent() {
-    if (content != null) {
-      return formatContent();
+    final String textContent = mContent.get(mLanguagecode);
+    if (textContent != null) {
+      return formatContent(textContent);
     }
     return null;
   }
 
-  private String formatContent() {
-    content = content.replaceAll(FORMAT_TIME, mCalendar.getTime().toString());
-    content = content.replaceAll(FORMAT_DATE, mCalendar.getTime().toString());
-    return content;
+  public String getContent(final String pLangCode) {
+    final String textContent = mContent.get(pLangCode);
+    if (textContent != null) {
+      return formatContent(textContent);
+    }
+    return null;
+  }
+
+  private String formatContent(String pContent) {
+    pContent = pContent.replaceAll(FORMAT_TIME, mCalendar.getTime().toString());
+    pContent = pContent.replaceAll(FORMAT_DATE, mCalendar.getTime().toString());
+    return pContent;
   }
 
   public void setContent(final String pContent) {
-    content = pContent;
+    mContent.put(DEFAULT_LANG_CODE, pContent);
+  }
+
+  public void setContent(final String pLangCode, final String pContent) {
+    mContent.put(pLangCode, pContent);
+  }
+
+  public void setLanguageCode(final String pLanguageCode) {
+    mLanguagecode = pLanguageCode;
   }
 
   public enum Type {
@@ -76,20 +97,20 @@ public class Response {
   }
 
   public String getNavigation() {
-    return navigation;
+    return mNavigation;
   }
 
   public void setNavigation(final String pNavigation) {
-    navigation = pNavigation;
+    mNavigation = pNavigation;
   }
 
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("{");
-    builder.append("type: '").append(type).append("',");
-    builder.append("content: '").append(content).append("'");
-    builder.append("navigation: '\r\n").append(navigation).append("\r\n'");
+    builder.append("mType: '").append(mType).append("',");
+    builder.append("mContent: '").append(mContent).append("'");
+    builder.append("mNavigation: '\r\n").append(mNavigation).append("\r\n'");
     builder.append("}");
     return builder.toString();
   }

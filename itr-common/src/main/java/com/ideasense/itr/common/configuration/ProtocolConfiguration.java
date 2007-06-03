@@ -78,64 +78,74 @@ public class ProtocolConfiguration {
     return type;
   }
 
-  public void setType(final Protocol pType) {
+  public ProtocolConfiguration setType(final Protocol pType) {
     type = pType;
+    return this;
   }
 
   public String getCompany() {
     return company;
   }
 
-  public void setCompany(final String pCompany) {
+  public ProtocolConfiguration setCompany(final String pCompany) {
     company = pCompany;
+    return this;
   }
 
   public String getUserAccount() {
     return userAccount;
   }
 
-  public void setUserAccount(final String pUserAccount) {
+  public ProtocolConfiguration setUserAccount(final String pUserAccount) {
     userAccount = pUserAccount;
+    return this;
   }
 
   public String getUserPassword() {
     return userPassword;
   }
 
-  public void setUserPassword(final String pUserPassword) {
+  public ProtocolConfiguration setUserPassword(final String pUserPassword) {
     userPassword = pUserPassword;
+    return this;
   }
 
   public Integer getReconnectAttempt() {
     return reconnectAttempt;
   }
 
-  public void setReconnectAttempt(final Integer pReconnectAttempt) {
+  public ProtocolConfiguration setReconnectAttempt(
+      final Integer pReconnectAttempt) {
     reconnectAttempt = pReconnectAttempt;
+    return this;
   }
 
   public String getServerHost() {
     return serverHost;
   }
 
-  public void setServerHost(final String pServerHost) {
+  public ProtocolConfiguration setServerHost(final String pServerHost) {
     serverHost = pServerHost;
+    return this;
   }
 
   public Integer getServerPort() {
     return serverPort;
   }
 
-  public void setServerPort(final Integer pServerPort) {
+  public ProtocolConfiguration setServerPort(final Integer pServerPort) {
     serverPort = pServerPort;
+    return this;
   }
 
   public Map<String, String> getProperties() {
     return properties;
   }
 
-  public void setProperties(final Map<String, String> pProperties) {
+  public ProtocolConfiguration setProperties(
+      final Map<String, String> pProperties) {
     properties = pProperties;
+    return this;
   }
 
   public static enum Protocol {

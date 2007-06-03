@@ -58,10 +58,9 @@ public class ResponseServiceImpl implements ResponseService {
     }
     // Build response textual content
     final StringBuilder buffer = new StringBuilder();
-    buffer.append("__");
     // Set welcome message
-//    buffer.append(pVisitor.getWelcomeMessage().getContent());
-//    buffer.append(LINE_SEPARATOR);
+    buffer.append(pVisitor.getWelcomeMessage().getContent());
+    buffer.append(LINE_SEPARATOR);
     // Prepare response message
     if (pVisitor.getCommand() == null) {
       buffer.append(response.getNavigation());
