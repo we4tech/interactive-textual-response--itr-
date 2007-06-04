@@ -35,6 +35,7 @@ import java.util.List;
 import java.net.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Implementation of {@code ResponseService}.
@@ -48,6 +49,7 @@ public class ResponseServiceImpl implements ResponseService {
    * Invalid message language text.
    */
   private static final String KEY_INVALID_MESSAGE = "invalid.message";
+  private static final String UTF_8_ENCODING = "UTF-8";
 
   public String prepareResponse(final ITRVisitor pVisitor) {
     LOG.debug("Preparing response for - " + pVisitor);
@@ -110,9 +112,11 @@ public class ResponseServiceImpl implements ResponseService {
     // Set parameters
     URLConnection urlConnection = pluginUrl.openConnection();
     InputStream inputStream = urlConnection.getInputStream();
+    InputStreamReader reader =
+        new InputStreamReader(inputStream, UTF_8_ENCODING);
     StringBuilder builder = new StringBuilder();
     int c;
-    while ((c = inputStream.read()) != -1) {
+    while ((c = reader.read()) != -1) {
       builder.append((char) c);
     }
     return builder.toString();
