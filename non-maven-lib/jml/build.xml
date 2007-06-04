@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+     JML Release Build
+                   
+	 Roger Chen
+     ====================================================================== -->
+<project name="JML Release Build" default="all">
+
+	<!-- ================================= 
+          target: all              
+         ================================= -->
+	<target name="all" depends="zip-src, zip-all, zip-jar">
+
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: init                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="init">
+		<tstamp />
+
+		<property name="dist.version" value="1.0b1" />
+		<property name="dist.src" value="jml-src-${dist.version}.zip" />
+		<property name="dist.jar" value="jml-${dist.version}.jar" />
+		<property name="dist.all" value="jml-src-${dist.version}-with-dependencies.zip" />
+
+		<property name="build.src" value="src" />
+		<property name="build.example" value="example" />
+		<property name="build.lib" value="lib" />
+		<property name="build.temp" value="temp" />
+
+        <property name="javadoc.dest.dir" value="javadocs" />
+
+		<fileset id="build.resource" dir="">
+			<include name="build.xml" />
+			<include name="changelog.txt" />
+			<include name="license.txt" />
+			<include name="readme.txt" />
+		</fileset>
+
+		<path id="build.classpath">
+			<fileset dir="${build.lib}">
+				<include name="**/*.jar" />
+			</fileset>
+		</path>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip-src                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip-src" depends="init">
+		<delete file="${dist.src}" />
+		<zip destfile="${dist.src}">
+			<fileset refid="build.resource" />
+			<fileset dir="">
+				<include name="${build.src}/**/*.*" />
+				<include name="${build.example}/**/*.*" />
+			</fileset>
+		</zip>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip-all                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip-all" depends="init">
+		<delete file="${dist.all}" />
+		<zip destfile="${dist.all}">
+			<fileset refid="build.resource" />
+			<fileset dir="">
+				<include name="${build.src}/**/*.*" />
+				<include name="${build.example}/**/*.*" />
+				<include name="${build.lib}/**/*.*" />
+			</fileset>
+		</zip>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip-jar                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip-jar" depends="init">
+		<delete file="${dist.jar}" />
+		<mkdir dir="${build.temp}" />
+		<javac srcdir="${build.src}" destdir="${build.temp}" source="1.4" target="1.4" debug="true" debuglevel="source,lines">
+			<classpath refid="build.classpath" />
+		</javac>
+		<jar destfile="${dist.jar}" basedir="${build.temp}" />
+		<delete dir="${build.temp}" />
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: javadoc                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="javadoc" depends="init">
+        <mkdir dir="${javadoc.dest.dir}" />
+        <javadoc
+            packagenames="net.sf.jml.*"
+            destdir="${javadoc.dest.dir}"
+            windowtitle="Java MSN Messenger Library Javadoc"
+            overview="${build.src}/overview.html"
+            failonerror="yes"
+            >
+            <sourcepath>
+                <path location="${build.src}"/>
+            </sourcepath>
+            <doctitle>Java MSN Messenger Library ${dist.version} Javadoc</doctitle>
+            <header>Java-JML</header>
+            <classpath>
+                <path>
+    				<fileset dir="${build.lib}" includes="*.jar" />
+                </path>
+            </classpath>
+            <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="${javadoc.src.dir}/jdk15"/>
+        </javadoc>
+    </target>
+
+</project>
+

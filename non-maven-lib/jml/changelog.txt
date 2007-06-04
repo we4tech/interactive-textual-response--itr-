@@ -1,0 +1,88 @@
+JML CHANGELOG
+=============
+
+Changes in version 1.0b1 (11.05.2006)
+---------------------------------------
+* switched to IntelliJ IDEA.
+* added listeners for buddy and group adds and deletes.
+* added various checks to eliminate pointless messages to MSN.
+* improved stability via null checks in some places.
+* improved personal message/current media support.
+* fixed bug where contactRemoved was not being called.
+* added support for SBP recognition (buddy properties like friend names and such)
+* fixed issues when renaming contacts.
+* fixed issue where asynchronous mode request was being ignored.
+* fixed many issues with buddy removal.
+* disabled 'fast login' support as it was not working after MSN protocol change.
+* fixed other issues with MSN protocol change related to user statuses.
+* added brazilian locale option.
+* updated version response to always be from Windows since some other OS's are rejected. (thanks sk_lionheart!)
+* fixed issues with addFriend not properly accounting for what lists folk were already in.
+* added login session listeners (low level network communication) thanks to sk_lionheart.
+
+
+Changes in version 1.0a3 (10.01.2006)
+---------------------------------------
+* examples updated
+* add support for set personal message
+* add support for set current media
+* add support for display personal picture
+* add support for send custom emoticons message
+* fixed bug in UUX command
+* fixed bug in IncomingLST for "LST N=tel:+8613812345678 2 4",but maybe cause more bugs :(
+* add support for removing buddies
+* upgraded commons-logging and cindy
+* added supported for generating javadocs easily
+
+
+Changes in version 1.0a2 (08.14.2005)
+---------------------------------------
+* changed lots of implemation class to interface
+* implement payload command in MsnMessage class
+* changed class MsnUserProfile to MsnUserProperties, MsnUserProfileType to MsnUserPropertyType
+* changed class MsnFriend to MsnContact
+* changed lots of class to interface
+* support BPR HSB command
+* support URL command
+* support UBX command
+* support UUX command
+* fixed bug in MsnDatacastMessage class
+* fixed bug in MSNP11 challenge
+
+
+Changes in version 1.0a1 (01.20.2005)
+---------------------------------------
+* add support for MSNP11
+* add support for multi-packet messages
+* support fast ssl login or normal ssl login
+* refactoring MsnMimeMessage hiberarchy
+* lot's of method name and package name changed
+* MsnMsg.setTranscationId and MsnMsg.getTranscationId spells wrong, change transcationId to transactionId
+
+
+Changes in version 0.21 (12.06.2004)
+---------------------------------------
+* changed packet from crmky to net.sf.jml
+* fixed a bug in nio framework
+* separate nio framework to a project: http://cindy.sourceforge.net/
+
+
+Changes in version 0.2 (09.20.2004)
+---------------------------------------
+* support for file transfer
+* support for email notification
+* support for get all active switchboards
+* refactor nio model
+* added MessengerSessionListener class for caching outgoing message in SB
+* added CopyOnWriteCollection class for store listeners
+* fixed MsnMessenger.logout implementation , closed all MsnSwitchboard before logout
+* fixed bugs in OutgoingSYN and IncomingSYN
+* changed MsnMessenger.waitRespMessages from LinkedHashMap to FixedSizeMap
+* changed MsnMessageRecognizer to Singleton
+* some minor changes
+
+
+Changes in version 0.1 (09.05.2004)
+---------------------------------------
+* support for MSNP8/MSNP9/MSNP10
+* support for MSNC0
