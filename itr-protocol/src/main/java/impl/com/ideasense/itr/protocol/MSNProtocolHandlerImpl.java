@@ -127,8 +127,10 @@ public class MSNProtocolHandlerImpl extends AbstractProtocolHandler
             mProtocolConfiguration.getUserAccount(),
             mProtocolConfiguration.getUserPassword());
     // Enable debugging
-    mMsnMessenger.setLogIncoming(true);
-    mMsnMessenger.setLogOutgoing(true);
+    if (DEBUG) {
+      mMsnMessenger.setLogIncoming(true);
+      mMsnMessenger.setLogOutgoing(true);
+    }
     // Set event listeners
     subscribeEventListeners();
   }

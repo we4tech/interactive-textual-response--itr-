@@ -46,6 +46,7 @@ public class CommandProcessorServiceImpl implements CommandProcessorService {
   private static final String COMMAND_SYSTEM_PREFIX = "sys:";
   private static final String SYSTEM_COMMAND_SEPARATOR = ":";
   private static final String COMMAND_LANG = "lang";
+  private static final String COMMAND_DEFAULT = "default";
 
   private final Logger LOG = LogManager.getLogger(getClass());
   private final boolean DEBUG = LOG.isDebugEnabled();
@@ -135,8 +136,12 @@ public class CommandProcessorServiceImpl implements CommandProcessorService {
       final String command = split[1];
       if (COMMAND_LANG.equalsIgnoreCase(command)) {
         final String langCode = split[2];
-        // Update cache table
-        mCacheLanguagePref.put(pVisitor.getName(), langCode);
+        if (!COMMAND_DEFAULT.equalsIgnoreCase(langCode)) {
+          // Update cache table
+          mCacheLanguagePref.put(pVisitor.getName(), langCode);
+        } else {
+          mCacheLanguagePref.put(pVisitor.getName(), "");
+        }
         return true;
       }
     } catch (Exception e) {
