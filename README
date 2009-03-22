@@ -1,4 +1,6 @@
 SVN repository location:
-all development incremental progress could be found here - svn://somewhereindhaka.net/os/itr/trunk/
-all completed iterations and releases will go here - svn://somewhereindhaka.net/os/itr/tags/
-all on going one more threaded development will go here - svn://somewhereindhaka.net/os/itr/branches/
+
+moved on git hub public project
+public clone - git clone git://github.com/we4tech/interactive-textual-response--itr-.git  
+
+
